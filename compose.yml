@@ -5,4 +5,17 @@ services:
       context: ./web
     ports:
       - "8080:8080"
+  db:
+    container_name: "facturacion-db-test"
+    image: mysql:8.0.44-debian
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: facturacion
+      MYSQL_USER: facturacion
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3307:3306"
+    volumes:
+      - "./database/mysql-data:/var/lib/mysql"
+    restart: unless-stopped
 
