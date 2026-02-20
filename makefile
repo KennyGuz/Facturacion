@@ -19,3 +19,6 @@ build-image-web:
 		--tag "web-facturacion:$(GIT_SHA)" \
 		--target runner \
 		./web
+install:
+	cd web && npm install
+	cd Server && npm install
