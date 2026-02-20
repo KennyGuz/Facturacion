@@ -15,7 +15,8 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build
+ARG DATABASE_URL
+RUN SKIP_ENV_VALIDATION=1 npm run build
 
 USER nodejs
 

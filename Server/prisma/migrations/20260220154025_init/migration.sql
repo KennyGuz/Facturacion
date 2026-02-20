@@ -1,9 +1,18 @@
 -- CreateTable
+CREATE TABLE `Role` (
+    `ID` BIGINT NOT NULL AUTO_INCREMENT,
+    `Name` VARCHAR(50) NOT NULL,
+
+    UNIQUE INDEX `Role_Name_key`(`Name`),
+    PRIMARY KEY (`ID`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Usuario` (
-    `ID` INTEGER NOT NULL AUTO_INCREMENT,
+    `ID` BIGINT NOT NULL AUTO_INCREMENT,
     `Cedula` VARCHAR(50) NOT NULL,
     `Nombre` VARCHAR(100) NOT NULL,
-    `Rol` VARCHAR(50) NOT NULL,
+    `IDRol` BIGINT NOT NULL,
     `EstaActivo` BOOLEAN NOT NULL,
 
     UNIQUE INDEX `Usuario_Cedula_key`(`Cedula`),
@@ -12,7 +21,7 @@ CREATE TABLE `Usuario` (
 
 -- CreateTable
 CREATE TABLE `Ingrediente` (
-    `ID` INTEGER NOT NULL AUTO_INCREMENT,
+    `ID` BIGINT NOT NULL AUTO_INCREMENT,
     `Nombre` VARCHAR(100) NOT NULL,
     `CantidadKilos` DOUBLE NOT NULL,
 
@@ -21,7 +30,7 @@ CREATE TABLE `Ingrediente` (
 
 -- CreateTable
 CREATE TABLE `Platillo` (
-    `ID` INTEGER NOT NULL AUTO_INCREMENT,
+    `ID` BIGINT NOT NULL AUTO_INCREMENT,
     `Nombre` VARCHAR(100) NOT NULL,
     `Precio` DOUBLE NOT NULL,
 
@@ -31,16 +40,16 @@ CREATE TABLE `Platillo` (
 -- CreateTable
 CREATE TABLE `PlatilloIngrediente` (
     `CantidadKilosIngrediente` DOUBLE NOT NULL,
-    `IDPlatillo` INTEGER NOT NULL,
-    `IDIngrediente` INTEGER NOT NULL,
+    `IDPlatillo` BIGINT NOT NULL,
+    `IDIngrediente` BIGINT NOT NULL,
 
     PRIMARY KEY (`IDPlatillo`, `IDIngrediente`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Mesa` (
-    `ID` INTEGER NOT NULL AUTO_INCREMENT,
-    `NumeroMesa` INTEGER NOT NULL,
+    `ID` BIGINT NOT NULL AUTO_INCREMENT,
+    `NumeroMesa` BIGINT NOT NULL,
     `EstaOcupada` BOOLEAN NOT NULL,
 
     UNIQUE INDEX `Mesa_NumeroMesa_key`(`NumeroMesa`),
@@ -49,9 +58,9 @@ CREATE TABLE `Mesa` (
 
 -- CreateTable
 CREATE TABLE `Orden` (
-    `ID` INTEGER NOT NULL AUTO_INCREMENT,
-    `IDMesa` INTEGER NOT NULL,
-    `IDUsuario` INTEGER NOT NULL,
+    `ID` BIGINT NOT NULL AUTO_INCREMENT,
+    `IDMesa` BIGINT NOT NULL,
+    `IDUsuario` BIGINT NOT NULL,
     `FechaHora` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `Total` DOUBLE NOT NULL,
     `Estado` VARCHAR(50) NOT NULL,
@@ -61,9 +70,9 @@ CREATE TABLE `Orden` (
 
 -- CreateTable
 CREATE TABLE `OrdenPlatillo` (
-    `ID` INTEGER NOT NULL AUTO_INCREMENT,
-    `IDOrden` INTEGER NOT NULL,
-    `IDPlatillo` INTEGER NOT NULL,
+    `ID` BIGINT NOT NULL AUTO_INCREMENT,
+    `IDOrden` BIGINT NOT NULL,
+    `IDPlatillo` BIGINT NOT NULL,
     `Cantidad` INTEGER NOT NULL,
 
     PRIMARY KEY (`ID`)
@@ -71,8 +80,8 @@ CREATE TABLE `OrdenPlatillo` (
 
 -- CreateTable
 CREATE TABLE `Factura` (
-    `ID` INTEGER NOT NULL AUTO_INCREMENT,
-    `IDOrden` INTEGER NOT NULL,
+    `ID` BIGINT NOT NULL AUTO_INCREMENT,
+    `IDOrden` BIGINT NOT NULL,
     `FechaHora` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `TotalBruto` DOUBLE NOT NULL,
     `Impuestos` DOUBLE NOT NULL,
@@ -84,18 +93,27 @@ CREATE TABLE `Factura` (
 
 -- CreateTable
 CREATE TABLE `Reserva` (
-    `ID` INTEGER NOT NULL AUTO_INCREMENT,
+    `ID` BIGINT NOT NULL AUTO_INCREMENT,
     `CedulaCliente` VARCHAR(50) NOT NULL,
     `NombreCliente` VARCHAR(100) NOT NULL,
     `TelefonoCliente` VARCHAR(20) NOT NULL,
-    `IDMesa` INTEGER NOT NULL,
-    `IDUsuario` INTEGER NOT NULL,
+    `IDMesa` BIGINT NOT NULL,
+    `IDUsuario` BIGINT NOT NULL,
     `FechaReserva` DATETIME(3) NOT NULL,
     `HoraReserva` VARCHAR(20) NOT NULL,
     `NumeroPersonas` INTEGER NOT NULL,
     `Nota` VARCHAR(255) NULL,
 
     PRIMARY KEY (`ID`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `_RoleToUsuario` (
+    `A` BIGINT NOT NULL,
+    `B` BIGINT NOT NULL,
+
+    UNIQUE INDEX `_RoleToUsuario_AB_unique`(`A`, `B`),
+    INDEX `_RoleToUsuario_B_index`(`B`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
@@ -124,3 +142,9 @@ ALTER TABLE `Reserva` ADD CONSTRAINT `Reserva_IDMesa_fkey` FOREIGN KEY (`IDMesa`
 
 -- AddForeignKey
 ALTER TABLE `Reserva` ADD CONSTRAINT `Reserva_IDUsuario_fkey` FOREIGN KEY (`IDUsuario`) REFERENCES `Usuario`(`ID`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_RoleToUsuario` ADD CONSTRAINT `_RoleToUsuario_A_fkey` FOREIGN KEY (`A`) REFERENCES `Role`(`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `_RoleToUsuario` ADD CONSTRAINT `_RoleToUsuario_B_fkey` FOREIGN KEY (`B`) REFERENCES `Usuario`(`ID`) ON DELETE CASCADE ON UPDATE CASCADE;

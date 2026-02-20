@@ -1,129 +1,131 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
   output   = "../generated/prisma"
 }
-
 datasource db {
   provider = "mysql"
+  //@ts-ignore
   url      = env("DATABASE_URL")
 }
 
 //Modelos
-//Modelo Rol
+//Modelo roles
+model Role {
+    ID   BigInt @id @default(autoincrement())
+    Name String @unique @db.VarChar(50)
+	Usuarios Usuario[]  
+
+}
 
 //Modelo Usuario
 model Usuario {
-  ID        Int       @id @default(autoincrement())
-  Cedula    String    @db.VarChar(50) @unique
-  Nombre    String    @db.VarChar(100)
-  Rol     String   @db.VarChar(50)
-  EstaActivo Boolean
+    ID         BigInt  @id @default(autoincrement())
+    Cedula     String  @unique @db.VarChar(50)
+    Nombre     String  @db.VarChar(100)
+	IDRol      BigInt
+	Roles Role[]
+    EstaActivo Boolean
 
-  Ordenes Orden[]
-  Reservas Reserva[]
+    Ordenes  Orden[]
+    Reservas Reserva[]
 }
+
+
 
 //Modelo Ingrediente
 model Ingrediente {
-  ID        Int       @id @default(autoincrement())
-  Nombre    String    @db.VarChar(100)
-  CantidadKilos  Float
-  PlatilloIngredientes PlatilloIngrediente[]
+    ID                   BigInt                @id @default(autoincrement())
+    Nombre               String                @db.VarChar(100)
+    CantidadKilos        Float
+    PlatilloIngredientes PlatilloIngrediente[]
 }
 
 //Modelo Platillo
 model Platillo {
-  ID        Int       @id @default(autoincrement())
-  Nombre    String    @db.VarChar(100)
-  Precio    Float
-  PlatilloIngredientes PlatilloIngrediente[]
-  OrdenPlatillos       OrdenPlatillo[]
+    ID                   BigInt                @id @default(autoincrement())
+    Nombre               String                @db.VarChar(100)
+    Precio               Float
+    PlatilloIngredientes PlatilloIngrediente[]
+    OrdenPlatillos       OrdenPlatillo[]
 }
 
 //Modelo PlatilloIngrediente
 model PlatilloIngrediente {
-  CantidadKilosIngrediente      Float
-  IDPlatillo    Int
-  IDIngrediente Int
-  Platillo    Platillo   @relation(fields: [IDPlatillo], references: [ID], onDelete: Cascade)
-  Ingrediente  Ingrediente @relation(fields: [IDIngrediente], references: [ID], onDelete: Cascade)
-  @@id([IDPlatillo, IDIngrediente])
+    CantidadKilosIngrediente Float
+    IDPlatillo               BigInt
+    IDIngrediente            BigInt
+    Platillo                 Platillo    @relation(fields: [IDPlatillo], references: [ID], onDelete: Cascade)
+    Ingrediente              Ingrediente @relation(fields: [IDIngrediente], references: [ID], onDelete: Cascade)
+
+    @@id([IDPlatillo, IDIngrediente])
 }
 
 //Modelo Mesa
 model Mesa {
-  ID        Int       @id @default(autoincrement())
-  NumeroMesa    Int       @unique
-  EstaOcupada Boolean
+    ID          BigInt  @id @default(autoincrement())
+    NumeroMesa  BigInt  @unique
+    EstaOcupada Boolean
 
-  Ordenes   Orden[]
-  Reservas Reserva[]
+    Ordenes  Orden[]
+    Reservas Reserva[]
 }
 
 //Modelo Orden
 model Orden {
-  ID        Int       @id @default(autoincrement())
-  IDMesa    Int
-  Mesa      Mesa      @relation(fields: [IDMesa], references: [ID])
+    ID     BigInt @id @default(autoincrement())
+    IDMesa BigInt
+    Mesa   Mesa   @relation(fields: [IDMesa], references: [ID])
 
-  IDUsuario Int
-  Usuario   Usuario   @relation(fields: [IDUsuario], references: [ID])
+    IDUsuario BigInt
+    Usuario   Usuario @relation(fields: [IDUsuario], references: [ID])
 
-  FechaHora DateTime  @default(now())
-  Total     Float
-  Estado    String    @db.VarChar(50)
+    FechaHora DateTime @default(now())
+    Total     Float
+    Estado    String   @db.VarChar(50)
 
-  OrdenPlatillos OrdenPlatillo[]
-  Factura        Factura?
+    OrdenPlatillos OrdenPlatillo[]
+    Factura        Factura?
 }
-
 
 //Modelo OrdenPlatillo
 model OrdenPlatillo {
-  ID          Int       @id @default(autoincrement())
-  IDOrden     Int
-  Orden       Orden     @relation(fields: [IDOrden], references: [ID])
+    ID      BigInt @id @default(autoincrement())
+    IDOrden BigInt
+    Orden   Orden  @relation(fields: [IDOrden], references: [ID])
 
-  IDPlatillo  Int
-  Platillo    Platillo  @relation(fields: [IDPlatillo], references: [ID])
+    IDPlatillo BigInt
+    Platillo   Platillo @relation(fields: [IDPlatillo], references: [ID])
 
-  Cantidad    Int
+    Cantidad Int
 }
 
 //Modelo Factura 
 model Factura {
-  ID          Int       @id @default(autoincrement())
-  IDOrden     Int       @unique
-  Orden       Orden     @relation(fields: [IDOrden], references: [ID])
+    ID      BigInt @id @default(autoincrement())
+    IDOrden BigInt @unique
+    Orden   Orden  @relation(fields: [IDOrden], references: [ID])
 
-  FechaHora   DateTime  @default(now())
-  TotalBruto  Float
-  Impuestos   Float
-  Total       Float
+    FechaHora  DateTime @default(now())
+    TotalBruto Float
+    Impuestos  Float
+    Total      Float
 }
-
 
 //Modelo Reserva
 model Reserva {
-  ID              Int       @id @default(autoincrement())
-  CedulaCliente   String    @db.VarChar(50)
-  NombreCliente   String    @db.VarChar(100)
-  TelefonoCliente String    @db.VarChar(20)
+    ID              BigInt @id @default(autoincrement())
+    CedulaCliente   String @db.VarChar(50)
+    NombreCliente   String @db.VarChar(100)
+    TelefonoCliente String @db.VarChar(20)
 
-  IDMesa    Int
-  Mesa      Mesa      @relation(fields: [IDMesa], references: [ID])
+    IDMesa BigInt
+    Mesa   Mesa   @relation(fields: [IDMesa], references: [ID])
 
-  IDUsuario Int
-  Usuario   Usuario   @relation(fields: [IDUsuario], references: [ID])
+    IDUsuario BigInt
+    Usuario   Usuario @relation(fields: [IDUsuario], references: [ID])
 
-  FechaReserva   DateTime
-  HoraReserva    String    @db.VarChar(20)
-  NumeroPersonas Int
-  Nota           String?   @db.VarChar(255)
+    FechaReserva   DateTime
+    HoraReserva    String   @db.VarChar(20)
+    NumeroPersonas Int 
+    Nota           String?  @db.VarChar(255)
 }

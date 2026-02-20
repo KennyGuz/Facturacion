@@ -19,6 +19,14 @@ build-image-web:
 		--tag "web-facturacion:$(GIT_SHA)" \
 		--target runner \
 		./web
+build-image-server:
+	docker buildx build \
+		--platform linux/amd64,linux/arm64 \
+		--tag "web-facturacion:$(GIT_SHA)" \
+		./Server
+
+
+
 install:
 	cd web && npm install
 	cd Server && npm install
