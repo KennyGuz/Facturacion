@@ -1,20 +1,21 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+    provider = "prisma-client"
+    output   = "../generated/prisma"
 }
+
 datasource db {
-  provider = "mysql"
-  //@ts-ignore
-  url      = env("DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
 //Modelos
 //Modelo roles
 model Role {
-    ID   BigInt @id @default(autoincrement())
-    Name String @unique @db.VarChar(50)
-	Usuarios Usuario[]  
-
+    ID        BigInt    @id @default(autoincrement())
+    Name      String    @unique @db.VarChar(50)
+    Usuarios  Usuario[]
+    CreatedAt DateTime  @default(now())
+    UpdatedAt DateTime  @updatedAt
 }
 
 //Modelo Usuario
@@ -22,15 +23,14 @@ model Usuario {
     ID         BigInt  @id @default(autoincrement())
     Cedula     String  @unique @db.VarChar(50)
     Nombre     String  @db.VarChar(100)
-	IDRol      BigInt
-	Roles Role[]
+    Roles      Role[]
     EstaActivo Boolean
 
-    Ordenes  Orden[]
-    Reservas Reserva[]
+    Ordenes   Orden[]
+    Reservas  Reserva[]
+    CreatedAt DateTime  @default(now())
+    UpdatedAt DateTime  @updatedAt
 }
-
-
 
 //Modelo Ingrediente
 model Ingrediente {
@@ -38,6 +38,8 @@ model Ingrediente {
     Nombre               String                @db.VarChar(100)
     CantidadKilos        Float
     PlatilloIngredientes PlatilloIngrediente[]
+    CreatedAt            DateTime              @default(now())
+    UpdatedAt            DateTime              @updatedAt
 }
 
 //Modelo Platillo
@@ -47,6 +49,8 @@ model Platillo {
     Precio               Float
     PlatilloIngredientes PlatilloIngrediente[]
     OrdenPlatillos       OrdenPlatillo[]
+    CreatedAt            DateTime              @default(now())
+    UpdatedAt            DateTime              @updatedAt
 }
 
 //Modelo PlatilloIngrediente
@@ -56,6 +60,8 @@ model PlatilloIngrediente {
     IDIngrediente            BigInt
     Platillo                 Platillo    @relation(fields: [IDPlatillo], references: [ID], onDelete: Cascade)
     Ingrediente              Ingrediente @relation(fields: [IDIngrediente], references: [ID], onDelete: Cascade)
+    CreatedAt                DateTime    @default(now())
+    UpdatedAt                DateTime    @updatedAt
 
     @@id([IDPlatillo, IDIngrediente])
 }
@@ -66,8 +72,10 @@ model Mesa {
     NumeroMesa  BigInt  @unique
     EstaOcupada Boolean
 
-    Ordenes  Orden[]
-    Reservas Reserva[]
+    Ordenes   Orden[]
+    Reservas  Reserva[]
+    CreatedAt DateTime  @default(now())
+    UpdatedAt DateTime  @updatedAt
 }
 
 //Modelo Orden
@@ -85,6 +93,8 @@ model Orden {
 
     OrdenPlatillos OrdenPlatillo[]
     Factura        Factura?
+    CreatedAt      DateTime        @default(now())
+    UpdatedAt      DateTime        @updatedAt
 }
 
 //Modelo OrdenPlatillo
@@ -96,7 +106,9 @@ model OrdenPlatillo {
     IDPlatillo BigInt
     Platillo   Platillo @relation(fields: [IDPlatillo], references: [ID])
 
-    Cantidad Int
+    Cantidad  Int
+    CreatedAt DateTime @default(now())
+    UpdatedAt DateTime @updatedAt
 }
 
 //Modelo Factura 
@@ -109,6 +121,8 @@ model Factura {
     TotalBruto Float
     Impuestos  Float
     Total      Float
+    CreatedAt  DateTime @default(now())
+    UpdatedAt  DateTime @updatedAt
 }
 
 //Modelo Reserva
@@ -126,6 +140,8 @@ model Reserva {
 
     FechaReserva   DateTime
     HoraReserva    String   @db.VarChar(20)
-    NumeroPersonas Int 
+    NumeroPersonas Int
     Nota           String?  @db.VarChar(255)
+    CreatedAt      DateTime @default(now())
+    UpdatedAt      DateTime @updatedAt
 }
