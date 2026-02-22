@@ -1,0 +1,31 @@
+services:
+  web:
+    container_name: web-facturacion
+    build:
+      context: ./web
+    ports:
+      - "8081:8080"
+    depends_on:
+      - api
+  api:
+    container_name: api-facturacion
+    build:
+      context: ./Server
+    ports:
+      - "42069:42069"
+    depends_on:
+      - db
+  db:
+    container_name: "facturacion-db-test"
+    image: mysql:8.0.44-debian
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: facturacion
+      MYSQL_USER: facturacion
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3307:3306"
+    volumes:
+      - "./database/mysql-data:/var/lib/mysql"
+    restart: unless-stopped
+

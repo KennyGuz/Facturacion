@@ -25,6 +25,13 @@ build-image-server:
 		--tag "web-facturacion:$(GIT_SHA)" \
 		./Server
 
+down-prod:
+	docker compose -f compose-prod.yml down --remove-orphans --volumes
+
+up-prod: down-prod
+	docker compose -f compose-prod.yml up --detach
+
+
 
 
 install:
