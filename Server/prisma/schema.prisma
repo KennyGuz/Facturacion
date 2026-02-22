@@ -16,21 +16,23 @@ model Role {
     Usuarios  Usuario[]
     CreatedAt DateTime  @default(now())
     UpdatedAt DateTime  @updatedAt
+    Active    Boolean   @default(true)
 }
 
 //Modelo Usuario
 model Usuario {
-    ID         BigInt  @id @default(autoincrement())
-    Cedula     String  @unique @db.VarChar(50)
-    Nombre     String  @db.VarChar(100)
-    Roles      Role[]
-    EstaActivo Boolean
+    ID     BigInt  @id @default(autoincrement())
+    Cedula String  @unique @db.VarChar(50)
+    Nombre String  @db.VarChar(100)
+    Roles  Role[]
+    Active Boolean @default(true)
 
     Ordenes   Orden[]
     Reservas  Reserva[]
     CreatedAt DateTime  @default(now())
     UpdatedAt DateTime  @updatedAt
 }
+
 
 //Modelo Ingrediente
 model Ingrediente {
@@ -40,6 +42,7 @@ model Ingrediente {
     PlatilloIngredientes PlatilloIngrediente[]
     CreatedAt            DateTime              @default(now())
     UpdatedAt            DateTime              @updatedAt
+    Active               Boolean               @default(true)
 }
 
 //Modelo Platillo
@@ -49,6 +52,7 @@ model Platillo {
     Precio               Float
     PlatilloIngredientes PlatilloIngrediente[]
     OrdenPlatillos       OrdenPlatillo[]
+    Active               Boolean               @default(true)
     CreatedAt            DateTime              @default(now())
     UpdatedAt            DateTime              @updatedAt
 }
@@ -60,6 +64,7 @@ model PlatilloIngrediente {
     IDIngrediente            BigInt
     Platillo                 Platillo    @relation(fields: [IDPlatillo], references: [ID], onDelete: Cascade)
     Ingrediente              Ingrediente @relation(fields: [IDIngrediente], references: [ID], onDelete: Cascade)
+    Active                   Boolean     @default(true)
     CreatedAt                DateTime    @default(now())
     UpdatedAt                DateTime    @updatedAt
 
@@ -74,6 +79,7 @@ model Mesa {
 
     Ordenes   Orden[]
     Reservas  Reserva[]
+    Active    Boolean   @default(true)
     CreatedAt DateTime  @default(now())
     UpdatedAt DateTime  @updatedAt
 }
@@ -92,6 +98,7 @@ model Orden {
     Estado    String   @db.VarChar(50)
 
     OrdenPlatillos OrdenPlatillo[]
+    Active         Boolean         @default(true)
     Factura        Factura?
     CreatedAt      DateTime        @default(now())
     UpdatedAt      DateTime        @updatedAt
@@ -109,6 +116,7 @@ model OrdenPlatillo {
     Cantidad  Int
     CreatedAt DateTime @default(now())
     UpdatedAt DateTime @updatedAt
+    Active    Boolean  @default(true)
 }
 
 //Modelo Factura 
@@ -123,6 +131,7 @@ model Factura {
     Total      Float
     CreatedAt  DateTime @default(now())
     UpdatedAt  DateTime @updatedAt
+    Active     Boolean  @default(true)
 }
 
 //Modelo Reserva
@@ -144,4 +153,5 @@ model Reserva {
     Nota           String?  @db.VarChar(255)
     CreatedAt      DateTime @default(now())
     UpdatedAt      DateTime @updatedAt
+    Active         Boolean  @default(true)
 }
