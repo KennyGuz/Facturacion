@@ -1,3 +1,42 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+
+
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+}
+
+.hide-scroll {
+	-ms-overflow-style: none;
+	/* Internet Explorer 10+ */
+	scrollbar-width: none;
+	/* Firefox, Safari 18.2+, Chromium 121+ */
+}
+
+.hide-scroll::-webkit-scrollbar {
+	display: none;
+	/* Older Safari and Chromium */
+}
+
+:root {
+  --primary: #4798f5;
+  --secondary: #F5B647;
+  --accent: #6480A0;
+
+  --background: #f9fbfd;
+  --foreground: #04090e;
+}
+
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}
