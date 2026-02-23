@@ -4,6 +4,7 @@ import userRoutes from "@/routes/userRouter";
 import cors from "cors";
 import logger from "morgan";
 import compression from "compression";
+import { errorHandlingMiddleware } from "./middlewares/errorhandlingMiddleware";
 
 
 const port = process.env.PORT || 42069;
@@ -32,6 +33,10 @@ app.get("/health", (_req: Request, res: Response) => {
 app.use('/api', authRoutes)
 
 app.use('/api', userRoutes)
+
+
+// debe ir ultimo
+app.use(errorHandlingMiddleware)
 
 app.listen(port, () => {
 	console.log(`Server running on port ${port}`);

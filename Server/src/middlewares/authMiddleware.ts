@@ -1,9 +1,10 @@
 import { runtimeEnv } from '@/env';
 import { prisma } from '@/utils/prisma';
 import { NextFunction, Request, Response } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+import { JwtPayload } from '@/types/jwt';
 
-export function verifyToken(req: Request, res: Response, next: NextFunction) {
+export async function verifyToken(req: Request, res: Response, next: NextFunction) {
 	//agarramos el header del request
 	const tokenHeader = req.headers['authorization'];
 	if (!tokenHeader || !tokenHeader.startsWith('Bearer ')) {
@@ -14,8 +15,31 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
 		//obtenemos el token del header
 		const token = tokenHeader.split(' ')[1];
 		const payload = jwt.verify(token, runtimeEnv.JWT_SECRET) as JwtPayload;
-		// @ts-ignore: el payload debe guardar el id del usuario
-		req.user = payload
+		
+
+
+		//validamos el rol del usuario 
+		const currentUserRoles = await prisma.usuario.findUnique({
+			where: {
+				ID: Number(payload.userid)
+			},
+			select: {
+				Roles: {
+					select: {
+						ID: true,
+						Name: true
+					}
+				}
+			}
+		})
+		if(!currentUserRoles || currentUserRoles.Roles.length === 0) return res.status(403).json({error: 'Usuario sin permisos, contactar al administrador'});
+
+		const roleNames = currentUserRoles.Roles.map(role => role.Name)
+
+
+		// @ts-ignore: el payload debe guardar el id del usuario y los roles
+		req.user = {userid: payload, roles: roleNames}
+		console.log(req.user)
 		next();
 
 	} catch (err) {
@@ -32,21 +56,8 @@ export async function validateRol(rol: string){
 		if(!req.user) return res.status(403).json({error: 'Acceso no autorizado'});
 
 
-		const currentUser = await prisma.usuario.findUnique({
-			where: {
-				ID: Number(req.user!.userid)
-			},
-			select: {
-				Roles: {
-					select: {
-						ID: true,
-						Name: true
-					}
-				}
-			}
-		})
-
-		if(!currentUser || currentUser!.Roles[0].Name !== rol) 
+		
+		if(req.user.roles[0] !== rol) 
 			return res.status(401).json({error: 'Acceso no autorizado'});
 		} catch (error) {
 			console.log(error)
