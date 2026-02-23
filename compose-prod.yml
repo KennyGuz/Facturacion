@@ -1,16 +1,16 @@
 services:
   web:
     container_name: web-facturacion
-    build:
-      context: ./web
+    image: web-facturacion:latest 
     ports:
       - "8081:8080"
     depends_on:
       - api
   api:
     container_name: api-facturacion
-    build:
-      context: ./Server
+    image: api-facturacion:latest
+    env_file:
+      - ./Server/.env.prod
     ports:
       - "42069:42069"
     depends_on:

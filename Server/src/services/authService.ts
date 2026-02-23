@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
-import { runtimeEnv } from "@/env";
+import { runtimeEnv } from "../env.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { prisma } from "@/utils/prisma";
-import { ServeResponse } from "@/types/response";
-import { UserData, UserSchema } from "./userService";
+import { prisma } from "../utils/prisma.js";
+import { ServeResponse } from "../types/response.js";
+import { UserData, UserSchema } from "./userService.js";
 
 export const authService = {
 

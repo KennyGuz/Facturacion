@@ -1,5 +1,5 @@
-import { userService } from "@/services/userService";
-import { querySchema } from "@/types/globalSchemas";
+import { userService } from "../services/userService.js";
+import { querySchema } from "../types/globalSchemas.js";
 import { Request, Response } from "express"
 
 export const userController = {

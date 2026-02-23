@@ -4,6 +4,7 @@ import { config } from "dotenv";
 config();
  
 export const runtimeEnv = createEnv({
+	skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   server: {
     DATABASE_URL: z.url(),
 	SALT_ROUNDS: z.number(),
