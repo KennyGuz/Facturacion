@@ -1,5 +1,5 @@
-import { runtimeEnv } from "@/env";
-import { authService } from "@/services/authService";
+import { runtimeEnv } from "../env.js";
+import { authService } from "../services/authService.js";
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken";
 

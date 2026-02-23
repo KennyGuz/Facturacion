@@ -13,10 +13,7 @@
     "isolatedModules": true,
     "incremental": true,
     "noImplicitAny": false,
-	"baseUrl": ".",
-    "paths": {
-		"@/*": ["./src/*"]
-    }
+	"baseUrl": "."
   },
   "types": ["node"],
   "include": ["."],

@@ -1,8 +1,8 @@
-import { runtimeEnv } from '@/env';
-import { prisma } from '@/utils/prisma';
+import { runtimeEnv } from '../env';
+import { prisma } from '../utils/prisma';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { JwtPayload } from '@/types/jwt';
+import { JwtPayload } from '../types/jwt';
 
 export async function verifyToken(req: Request, res: Response, next: NextFunction) {
 	//agarramos el header del request

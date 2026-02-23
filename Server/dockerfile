@@ -20,11 +20,22 @@ RUN \
 ##### BUILDER
 
 FROM  node:20-alpine AS builder
-ARG DATABASE_URL
-ARG NEXT_PUBLIC_CLIENTVAR
 WORKDIR /app
+ARG DATABASE_URL
+ARG SALT_ROUNDS 
+ARG JWT_SECRET
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+ENV SKIP_ENV_VALIDATION=1
+
+RUN \
+	if [ -f yarn.lock ]; then SKIP_ENV_VALIDATION=1 yarn prisma generate; \
+    elif [ -f package-lock.json ]; then SKIP_ENV_VALIDATION=1 npm prisma generate; \
+    elif [ -f pnpm-lock.yaml ]; then SKIP_ENV_VALIDATION=1 npm install -g pnpm &&  pnpm prisma generate; \
+    else echo "Lockfile not found." && exit 1; \
+    fi
+
 
 RUN \
     if [ -f yarn.lock ]; then SKIP_ENV_VALIDATION=1 yarn build; \
@@ -33,12 +44,13 @@ RUN \
     else echo "Lockfile not found." && exit 1; \
     fi
 ##### RUNNER
-FROM gcr.io/distroless/nodejs20-debian12 AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
-
 ENV NODE_ENV=production
+RUN apk add --no-cache openssl
 COPY --from=builder /app/dist ./dist
-
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/prisma ./prisma
 EXPOSE 42069
-
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/src/index.js"]

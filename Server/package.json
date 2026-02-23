@@ -3,12 +3,12 @@
   "version": "1.1.0",
   "description": "API de facturación",
   "type": "module",
-  "main": "src/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENVIROMENT=development tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "build": "tsc && tsc-alias -f",
+    "start": "node dist/src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +41,7 @@
     "passport-local": "^1.0.0",
     "prisma": "^6.19.2",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "winston": "^3.18.3",

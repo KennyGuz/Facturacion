@@ -48,6 +48,39 @@ detener la base de datos
 make down
 ```
 
+### Producción
+
+Docker me  causo muchos problemas entonces por eso usa esta guia
+
+- instalar MAKE es necesario porfavor.
+
+
+- **crear un archivo .env.prod en Server** con las siguientes variables
+    - DATABASE_URL
+    - SALT_ROUNDS
+    - JWT_SECRET
+
+- Construir las imagenes
+```bash
+    make build-images
+ ```
+
+- Elevar las imagenes a producción
+```bash
+     make promote-images
+```
+- ejecutar el comando
+```bash
+    make up-prod
+```
+- para detener todo
+```bash
+     make down-prod
+```
+
+
+
+
 
 
 

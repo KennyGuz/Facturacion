@@ -1,11 +1,10 @@
 import express, { Request, Response } from "express";
-import authRoutes from "@/routes/authRoutes";
-import userRoutes from "@/routes/userRouter";
 import cors from "cors";
 import logger from "morgan";
 import compression from "compression";
-import { errorHandlingMiddleware } from "./middlewares/errorhandlingMiddleware";
-
+import { errorHandlingMiddleware } from "./middlewares/errorhandlingMiddleware.js";
+import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const port = process.env.PORT || 42069;
 
