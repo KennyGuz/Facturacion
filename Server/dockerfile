@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:20-alpine AS deps
+FROM  node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN \
 
 ##### BUILDER
 
-FROM --platform=linux/amd64 node:20-alpine AS builder
+FROM  node:20-alpine AS builder
 ARG DATABASE_URL
 ARG NEXT_PUBLIC_CLIENTVAR
 WORKDIR /app
@@ -33,13 +33,12 @@ RUN \
     else echo "Lockfile not found." && exit 1; \
     fi
 ##### RUNNER
-FROM --platform=linux/amd64 gcr.io/distroless/nodejs20-debian12 AS runner
+FROM gcr.io/distroless/nodejs20-debian12 AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 42069
 
-
-CMD [ "npm", "run", "start" ]
+CMD ["node", "dist/index.js"]

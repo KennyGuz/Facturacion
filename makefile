@@ -22,8 +22,14 @@ build-image-web:
 build-image-server:
 	docker buildx build \
 		--platform linux/amd64,linux/arm64 \
-		--tag "web-facturacion:$(GIT_SHA)" \
+		--tag "api-facturacion:$(GIT_SHA)" \
 		./Server
+build-images: build-image-web build-image-server
+	echo "Build images done"
+
+promote-images:
+	docker image tag web-facturacion:$(GIT_SHA) web-facturacion:$(BUILD_TAG)
+	docker image tag api-facturacion:$(GIT_SHA) api-facturacion:$(BUILD_TAG)
 
 down-prod:
 	docker compose -f compose-prod.yml down --remove-orphans --volumes
