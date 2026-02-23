@@ -3,6 +3,8 @@
 @import "tailwindcss";
 @custom-variant dark (&:is(.dark *));
 
+
+/* Colores de marca */
 @theme inline {
 
 
@@ -12,6 +14,28 @@
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
 }
+
+:root {
+  --primary: #4798f5;
+  --secondary: #F5B647;
+  --accent: #6480A0;
+
+  --background: #f9fbfd;
+  --foreground: #04090e;
+}
+
+.dark {
+
+    --primary: #4798f5;
+  --secondary: #F5B647;
+  --accent: #6480A0;
+
+  --background: #030508;
+  --foreground: #eff5fb;
+
+
+}
+
 
 .hide-scroll {
 	-ms-overflow-style: none;
@@ -23,15 +47,6 @@
 .hide-scroll::-webkit-scrollbar {
 	display: none;
 	/* Older Safari and Chromium */
-}
-
-:root {
-  --primary: #4798f5;
-  --secondary: #F5B647;
-  --accent: #6480A0;
-
-  --background: #f9fbfd;
-  --foreground: #04090e;
 }
 
 

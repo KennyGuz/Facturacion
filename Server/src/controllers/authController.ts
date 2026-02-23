@@ -1,0 +1,52 @@
+import { runtimeEnv } from "@/env";
+import { authService } from "@/services/authService";
+import { Request, Response } from "express"
+import jwt from "jsonwebtoken";
+
+export const authController = {
+	async register(req: Request, res: Response) {
+		try {
+			const { email, password, nombre, apellido, cedula } = req.body;
+
+			if (!email || !password || !nombre || !cedula || !apellido) return res.status(400).json({ error: "Bad Request" });
+			const result = await authService.register({
+				Email: email,
+				Password: password,
+				Nombre: nombre,
+				Apellido: apellido,
+				Cedula: cedula
+			});
+			if (!result) return res.status(400).json({ error: "Error al registrar" });
+
+			return res.status(200).json({ result });
+		} catch (error) {
+			res.status(500).json({ error: "Error Interno del servidor" });
+		}
+
+	},
+
+
+
+	async login(req: Request, res: Response) {
+		try {
+			const { email, password } = req.body;
+			if (!email || !password) return res.status(400).json({ error: "Bad Request" });
+			const result = await authService.login(email, password);
+			if (!result.success) return res.status(400).json({ error: result.message });
+
+			const token = jwt.sign({ userid: result.data.ID }, runtimeEnv.JWT_SECRET);
+
+			res.cookie("token", token, {
+				httpOnly: true,
+				secure: true,
+				sameSite: "strict",
+				maxAge: 60 * 60 * 24 * 30 * 1000,
+
+			})
+			return res.status(200).json({ success: result.success, message: result.message });
+		} catch (error) {
+			console.log(error)
+			res.status(500).json({ error: "Error Interno del servidor" });
+		}
+	},
+}

@@ -1,21 +1,12 @@
 <div class="flex flex-col min-h-dvh">
-  <!-- Navbar -->
-  <nav class="bg-primary p-2">
-    <div class="container mx-auto">
-      <a class="text-4xl font-bold ">
-        Valhalla Bar Restaurant
-      </a>
-    </div>
-  </nav>
-
-  <!-- Main Section -->
+    <!-- Main Section -->
   <section class="flex grow">
     <!-- Image Column -->
     <div class="hidden lg:flex lg:w-1/2">
       <img
         src="home.webp"
         alt="Valhalla Restaurant"
-        loading="lazy"
+        loading="eager"
         class="h-dvh w-full object-cover"
       />
     </div>
@@ -23,7 +14,7 @@
     <!-- Form Column -->
     <div class="w-full lg:w-1/2 flex items-center justify-center px-4 py-8 lg:py-0">
       <div class="w-full max-w-md">
-        <form class="pb-5 border-b border-accent">
+        <form (submit)="iniciarSesion()" class="pb-5 border-b border-accent">
           <!-- Title -->
           <div class="text-center font-bold text-[10vh]  mb-2">
             Valhalla

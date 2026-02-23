@@ -3,10 +3,10 @@
   "version": "1.1.0",
   "description": "API de facturación",
   "type": "module",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch index.ts",
+    "dev": "NODE_ENVIROMENT=development tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -15,6 +15,9 @@
   "license": "ISC",
   "devDependencies": {
     "@prisma/client": "^6.19.2",
+    "@types/bcrypt": "^6.0.0",
+    "@types/compression": "^1.8.1",
+    "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
@@ -26,7 +29,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
     "bcryptjs": "^3.0.3",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "http-status-codes": "^2.3.0",
@@ -46,6 +49,9 @@
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.4.1",
     "@t3-oss/env-core": "^0.13.10",
+    "bcrypt": "^6.0.0",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
     "zod": "^4.3.6"
   }
 }
