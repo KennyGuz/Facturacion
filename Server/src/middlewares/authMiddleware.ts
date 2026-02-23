@@ -50,8 +50,8 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
 	}
 }
 
-export async function validateRol(rol: string){
-	return async (req: Request, res: Response, next: NextFunction) => {
+export  function validateRol(rol: string){
+	return  (req: Request, res: Response, next: NextFunction) => {
 		try {
 		if(!req.user) return res.status(403).json({error: 'Acceso no autorizado'});
 
