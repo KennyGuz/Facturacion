@@ -180,8 +180,8 @@ export const userService = {
 					{ Email: { contains: search } },
 				]
 			}
-
-			if (activo) where.Active = activo
+			console.log("activo: ", activo)
+			if (activo !== undefined) where.Active = activo
 
 
 			const [users, total] = await Promise.all([prisma.usuario.findMany({

@@ -3,9 +3,12 @@ import { z } from "zod";
 export const querySchema = z.object({
 
  activo: z
-    .enum(["true", "false"])
-    .optional()
-    .transform(val => val === "true"),
+  .enum(["true", "false"])
+  .optional()
+  .transform(val => {
+    if (val === undefined) return undefined;
+    return val === "true";
+  }),
 
   search: z.string().optional(),
 

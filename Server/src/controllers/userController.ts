@@ -67,6 +67,8 @@ export const userController = {
 	async getUsers(req: Request, res: Response) {
 		try {
 			const { activo, search, page, limit } = req.query;
+
+			// todo: una funcion que parsea los query params
 			const validationResult = querySchema.safeParse({ activo, search, page, limit });
 
 			// validamos los query params
