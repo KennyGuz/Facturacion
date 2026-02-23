@@ -13,8 +13,8 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
 	try {
 		//obtenemos el token del header
 		const token = tokenHeader.split(' ')[1];
-		// lo verificamos
 		const payload = jwt.verify(token, runtimeEnv.JWT_SECRET) as JwtPayload;
+		// @ts-ignore: el payload debe guardar el id del usuario
 		req.user = payload
 		next();
 
@@ -46,7 +46,8 @@ export async function validateRol(rol: string){
 			}
 		})
 
-		if(!currentUser || currentUser!.Roles[0].Name !== rol) return res.status(403).json({error: 'Acceso no autorizado'});
+		if(!currentUser || currentUser!.Roles[0].Name !== rol) 
+			return res.status(401).json({error: 'Acceso no autorizado'});
 		} catch (error) {
 			console.log(error)
 			return res.status(500).json({error: 'Error interno del servidor'});

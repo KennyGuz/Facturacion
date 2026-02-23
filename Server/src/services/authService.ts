@@ -1,9 +1,9 @@
-import { Prisma } from "generated/prisma/browser";
 import bcrypt from "bcrypt";
 import { runtimeEnv } from "@/env";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { prisma } from "@/utils/prisma";
 import { ServeResponse } from "@/types/response";
+import { UserData, UserSchema } from "./userService";
 
 export const authService = {
 
@@ -49,17 +49,29 @@ export const authService = {
 
 	},
 
-	async register(data: Prisma.UsuarioCreateInput): Promise<Boolean> {
+	async register(data: UserData): Promise<ServeResponse> {
 		try {
-			const password = await bcrypt.hash(data.Password, runtimeEnv.SALT_ROUNDS);
+
+			const validationResult = UserSchema.safeParse(data);
+
+			if (!validationResult.success) {
+				return {
+					success: false,
+					message: "Datos invalidos",
+					errors: validationResult.error.flatten().fieldErrors
+				};
+			}
+			const validatedData = validationResult.data
+
+			const password = await bcrypt.hash(validatedData.password, runtimeEnv.SALT_ROUNDS);
 
 
 			await prisma.usuario.create({
 				data: {
-					Email: data.Email,
-					Nombre: data.Nombre,
-					Apellido: data.Apellido,
-					Cedula: data.Cedula,
+					Email: validatedData.email,
+					Nombre: validatedData.nombre,
+					Apellido: validatedData.apellido,
+					Cedula: validatedData.cedula,
 					Password: password,
 					Active: true,
 					Roles: {
@@ -71,13 +83,20 @@ export const authService = {
 				},
 			});
 
-			return true;
+			return {
+				success: true,
+				message: "OK",
+			};
 		} catch (error: unknown) {
 			// loggear el error en grafana o prometheus o algo asi
 			console.error(error);
 			if (error instanceof PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
-					return false
+					return {
+						success: false,
+						message: "Usuario o contraseña incorrectos",
+						error: "Error al crear usuario"
+					}
 				}
 
 			}

@@ -8,17 +8,18 @@ export const authController = {
 		try {
 			const { email, password, nombre, apellido, cedula } = req.body;
 
-			if (!email || !password || !nombre || !cedula || !apellido) return res.status(400).json({ error: "Bad Request" });
 			const result = await authService.register({
-				Email: email,
-				Password: password,
-				Nombre: nombre,
-				Apellido: apellido,
-				Cedula: cedula
+				email,
+				password,
+				 nombre,
+				 apellido,
+				 cedula,
 			});
-			if (!result) return res.status(400).json({ error: "Error al registrar" });
 
-			return res.status(200).json({ result });
+			// enviar al frontend el error 
+			if (!result.success) return res.status(400).json({result});
+
+			return res.status(201).json({ result });
 		} catch (error) {
 			res.status(500).json({ error: "Error Interno del servidor" });
 		}
