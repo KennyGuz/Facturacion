@@ -4,7 +4,8 @@ import { userController } from "../controllers/userController.js";
 
 const router = Router();
 
-router.get("/user/:id",  verifyToken, validateRol('admin'), userController.getUser);
+router.get("/user/:id",  verifyToken, userController.getUser);
+router.get("/profile", verifyToken, userController.getProfile);
 router.get("/users", verifyToken, validateRol('admin'), userController.getUsers);
 router.put("/user/:id", verifyToken, validateRol('admin'), userController.updateUser);
 router.delete("/user/:id", verifyToken, validateRol('admin'), userController.deleteUser);
