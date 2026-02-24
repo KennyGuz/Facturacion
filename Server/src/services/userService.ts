@@ -3,6 +3,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { prisma } from "../utils/prisma.js";
 import { ServeResponse } from "../types/response.js";
 import { z } from 'zod'
+import { JwtPayload } from "src/types/jwt.js";
 
 export const UserSchema = z.object({
 	nombre: z.string()
@@ -132,12 +133,32 @@ export const userService = {
 		}
 	},
 
-	async getUser(id: number): Promise<ServeResponse> {
+	async getUser(id: number, currentUser: JwtPayload): Promise<ServeResponse> {
 		try {
+			if (currentUser.roles[0] !== 'admin' && Number(currentUser.userid) !== id) {
+				return {
+					success: false,
+					message: "No tienes permisos para acceder a este usuario",
+					error: "Unauthorized"
+				};
+			}
 			const user = await prisma.usuario.findUnique({
 				where: {
 					ID: id
-				}
+				},
+				select: {
+					Nombre: true,
+					Apellido: true,
+					Cedula: true,
+					Email: true,
+					Active: true,
+					Roles: {
+						select: {
+							ID: true,
+							Name: true
+						}
+					}
+				},
 			})
 			if (!user) return {
 				success: false,
@@ -221,6 +242,57 @@ export const userService = {
 
 		}
 	},
+
+		async getProfile(currentUser: JwtPayload): Promise<ServeResponse> {
+		try {
+
+			const id = Number(currentUser.userid)
+			const user = await prisma.usuario.findUnique({
+				where: {
+					ID: id
+				},
+				select: {
+					Nombre: true,
+					Apellido: true,
+					Cedula: true,
+					Email: true,
+					Active: true,
+					Roles: {
+						select: {
+							ID: true,
+							Name: true
+						}
+					}
+				},
+			})
+			if (!user) return {
+				success: false,
+				message: "Usuario no encontrado",
+				error: "Usuario no encontrado"
+			};
+			return {
+				success: true,
+				message: "OK",
+				data: user
+			};
+		} catch (error) {
+			// loggear el error en grafana o prometheus o algo asi
+			console.error(error);
+			if (error instanceof PrismaClientKnownRequestError) {
+				if (error.code === 'P2002') {
+					return {
+						success: false,
+						message: "Error al obtener usuario",
+						error: "Error al obtener usuario"
+					}
+				}
+
+			}
+			throw error;
+		}
+
+	},
+
 
 
 }

@@ -38,8 +38,8 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
 
 
 		// @ts-ignore: el payload debe guardar el id del usuario y los roles
-		req.user = {userid: payload, roles: roleNames}
-		console.log(req.user)
+		req.user = {userid: payload.userid, roles: roleNames}
+		console.log("user roles:", req.user?.roles[0])
 		next();
 
 	} catch (err) {

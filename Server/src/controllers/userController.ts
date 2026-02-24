@@ -53,8 +53,9 @@ export const userController = {
 				message: "id no valido",
 				error: "Bad Request"
 			});
+			const currentUser = req.user;
 
-			const result = await userService.getUser(Number(id));
+			const result = await userService.getUser(Number(id), currentUser!);
 			if (!result.success) return res.status(400).json(result);
 
 			return res.status(200).json(result);
@@ -95,5 +96,21 @@ export const userController = {
 			res.status(500).json({ success: false, error: "Error Interno del servidor" });
 		}
 	},
+
+	async getProfile(req: Request, res: Response) {
+		try {
+			const currentUser = req.user;
+
+			const result = await userService.getProfile( currentUser!);
+			if (!result.success) return res.status(400).json(result);
+
+			return res.status(200).json(result);
+		} catch (error) {
+			console.log(error)
+			res.status(500).json({ success: false, error: "Error Interno del servidor" });
+		}
+	},
+
+
 
 }
