@@ -6,14 +6,13 @@ import { JwtPayload } from '../types/jwt';
 
 export async function verifyToken(req: Request, res: Response, next: NextFunction) {
 	//agarramos el header del request
-	const tokenHeader = req.headers['authorization'];
-	if (!tokenHeader || !tokenHeader.startsWith('Bearer ')) {
+	const token = req.cookies['_tk'];
+	if (!token) {
 		return res.status(403).json({ error: 'El token no esta presente' })
 	}
 
 	try {
 		//obtenemos el token del header
-		const token = tokenHeader.split(' ')[1];
 		const payload = jwt.verify(token, runtimeEnv.JWT_SECRET) as JwtPayload;
 		
 
