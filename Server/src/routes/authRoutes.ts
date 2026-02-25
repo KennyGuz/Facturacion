@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authController } from "../controllers/authController.js";
 import { validateRol, verifyToken } from "../middlewares/authMiddleware.js";
+import { verifyResetToken } from "src/middlewares/resetPasswordMiddleware.js";
 
 const router = Router();
 
@@ -191,6 +192,40 @@ router.post("/login", authController.login);
  *               message: Error interno del servidor
  */
 router.post("/logout", authController.logout);
+
+
+
+/**
+ * @swagger
+ * /api/resetpassword:
+ *   post:
+ *     summary: resetear contraseña
+ *     tags: [autenticacion]
+ *     responses:
+ *       201:
+ *         description: El usuario cerro sesion correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Response'
+ *             example:
+ *               success: true
+ *               message: Sesion cerrada
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Response'
+ *             example:
+ *               success: false
+ *               message: Error interno del servidor
+ */
+router.post("/resetpassword", authController.sendResetPassword);
+
+
+router.post("/validateResetToken", verifyResetToken, authController.resetPassword);
+
 
 
 export default router;

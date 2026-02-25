@@ -4,6 +4,10 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { prisma } from "../utils/prisma.js";
 import { ServeResponse } from "../types/response.js";
 import { UserData, UserSchema } from "./userService.js";
+import nodemailer from "nodemailer";
+import jwt from "jsonwebtoken";
+import { nodemailerMjmlPlugin } from "nodemailer-mjml";
+import path from "node:path";
 
 export const authService = {
 
@@ -104,5 +108,119 @@ export const authService = {
 
 		}
 
+	},
+
+
+	async sendResetPassword(email: string): Promise<ServeResponse> {
+		try {
+			const user = await prisma.usuario.findUnique({
+				where: {
+					Email: email,
+					Active: true
+				}
+			})
+			if (!user) return {
+				success: false,
+				message: "Usuario no encontrado"
+			};
+
+			const token = jwt.sign({ userid: user.ID },
+				runtimeEnv.JWT_RESET_SECRET,
+				{ expiresIn: '5m' });
+
+
+			const transporter = nodemailer.createTransport({
+
+				service: "gmail",
+				auth: {
+					user: runtimeEnv.SMPT_HOST,
+					pass: runtimeEnv.SMPT_PASS
+				}
+
+			});
+			transporter.use("compile", nodemailerMjmlPlugin(
+				{
+					templateFolder: path.join(process.cwd(), "src/templates"),
+				}
+			));
+
+			await transporter.sendMail({
+				from: runtimeEnv.SMPT_HOST,
+				to: user.Email,
+				subject: "Reseteo de contraseña",
+				templateLayoutName: "reset",
+				templateData: {
+					FirstName: user.Nombre,
+					LastName: user.Apellido,
+					Token: token,
+				},
+			})
+			return {
+				success: true,
+				message: "OK",
+				data: user
+			};
+		} catch (error) {
+			// loggear el error en grafana o prometheus o algo asi
+			console.error(error);
+			if (error instanceof PrismaClientKnownRequestError) {
+				if (error.code === 'P2002') {
+					return {
+						success: false,
+						message: "Usuario o contraseña incorrectos"
+					}
+				}
+
+			}
+			throw error;
+		}
+	},
+
+
+	async resetPassword(userid: number, password: string): Promise<ServeResponse> {
+		try {
+			console.log("usuario id", userid)
+
+			const user = await prisma.usuario.findUnique({
+				where: {
+					ID: userid,
+					Active: true
+				}
+			})
+
+			if (!user) return {
+				success: false,
+				message: "Usuario no encontrado"
+			};
+
+			const passwordHash = await bcrypt.hash(password, runtimeEnv.SALT_ROUNDS);
+
+			await prisma.usuario.update({
+				where: {
+					ID: user.ID
+				},
+				data: {
+					Password: passwordHash
+				}
+			});
+
+			return {
+				success: true,
+				message: "Contraseña reseteada",
+			};
+		} catch (error) {
+			// loggear el error en grafana o prometheus o algo asi
+			console.error(error);
+			if (error instanceof PrismaClientKnownRequestError) {
+				if (error.code === 'P2002') {
+					return {
+						success: false,
+						message: "Por favor contactar con el administrador"
+					}
+				}
+
+			}
+			throw error;
+		}
 	}
 };
