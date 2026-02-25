@@ -37,7 +37,7 @@ export const authController = {
 
 			const token = jwt.sign({ userid: result.data.ID }, runtimeEnv.JWT_SECRET);
 
-			res.cookie("token", token, {
+			res.cookie("_tk", token, {
 				httpOnly: true,
 				secure: true,
 				sameSite: "strict",
@@ -50,4 +50,21 @@ export const authController = {
 			res.status(500).json({ error: "Error Interno del servidor" });
 		}
 	},
+
+		async logout(_req: Request, res: Response) {
+		try {
+			res.clearCookie("_tk", {
+				httpOnly: true,
+				secure: true,
+				sameSite: "strict",
+				maxAge: 60 * 60 * 24 * 30 * 1000,
+			});
+
+			return res.status(200).json({ success: true, message: "Sesion cerrada" });
+		} catch (error) {
+			console.log(error)
+			res.status(500).json({ error: "Error Interno del servidor" });
+		}
+	},
+
 }
