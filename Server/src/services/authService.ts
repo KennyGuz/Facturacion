@@ -8,6 +8,10 @@ import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 import { nodemailerMjmlPlugin } from "nodemailer-mjml";
 import path from "node:path";
+import { v4 as uuidv4 } from "uuid";
+import { redisClient } from "src/lib/redis.js";
+
+
 
 export const authService = {
 
@@ -113,9 +117,22 @@ export const authService = {
 
 	async sendResetPassword(email: string): Promise<ServeResponse> {
 		try {
+
+			const validationResult = UserSchema.pick({email: true}).safeParse({email});
+
+			if (!validationResult.success) {
+				return {
+					success: false,
+					message: "Datos invalidos",
+					errors: validationResult.error.flatten().fieldErrors
+				};
+			}
+			const validatedData = validationResult.data
+
+			
 			const user = await prisma.usuario.findUnique({
 				where: {
-					Email: email,
+					Email: validatedData.email,
 					Active: true
 				}
 			})
@@ -123,10 +140,15 @@ export const authService = {
 				success: false,
 				message: "Usuario no encontrado"
 			};
+			const jit = uuidv4();
 
-			const token = jwt.sign({ userid: user.ID },
+			const token = jwt.sign({ userid: user.ID, jit },
 				runtimeEnv.JWT_RESET_SECRET,
 				{ expiresIn: '5m' });
+
+
+			// guardamos en redis el token para que no se pueda resetear mas de una vez
+			await redisClient.set(`rst:${jit}`, "pending", { ex: 300 });
 
 
 			const transporter = nodemailer.createTransport({
@@ -179,25 +201,23 @@ export const authService = {
 
 	async resetPassword(userid: number, password: string): Promise<ServeResponse> {
 		try {
-			console.log("usuario id", userid)
+			const validationResult = UserSchema.pick({password: true}).safeParse({password});
 
-			const user = await prisma.usuario.findUnique({
-				where: {
-					ID: userid,
-					Active: true
-				}
-			})
+			if (!validationResult.success) {
+				return {
+					success: false,
+					message: "Datos invalidos",
+					errors: validationResult.error.flatten().fieldErrors
+				};
+			}
 
-			if (!user) return {
-				success: false,
-				message: "Usuario no encontrado"
-			};
+			const validatedData = validationResult.data
 
-			const passwordHash = await bcrypt.hash(password, runtimeEnv.SALT_ROUNDS);
+			const passwordHash = await bcrypt.hash(validatedData.password, runtimeEnv.SALT_ROUNDS);
 
 			await prisma.usuario.update({
 				where: {
-					ID: user.ID
+					ID: userid
 				},
 				data: {
 					Password: passwordHash
