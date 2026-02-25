@@ -6,12 +6,15 @@ import { errorHandlingMiddleware } from "./middlewares/errorhandlingMiddleware.j
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import cookieParser from "cookie-parser";
+import swaggerUI from "swagger-ui-express";
+import specs from "./swagger/swagger.js";
 
 const port = process.env.PORT || 42069;
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use("/api-docs",swaggerUI.serve, swaggerUI.setup(specs));
 
 app.use(cors({
 	origin: "http://localhost:4200",
@@ -27,6 +30,7 @@ app.use(compression({
 	level: 4,
 	threshold: 1024,
 }));
+
 
 app.get("/health", (_req: Request, res: Response) => {
 	res.send("OK");
