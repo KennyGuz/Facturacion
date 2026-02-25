@@ -17,6 +17,15 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 scoop install make
 ```
 
+#### Instalar make para unix
+https://www.gnu.org/software/make/ 
+
+```bash
+# instalar make con brew
+brew install make
+
+```
+
 #### Instalar docker
 
 https://docs.docker.com/desktop/setup/install/windows-install/
