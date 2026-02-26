@@ -5,6 +5,9 @@ import compression from "compression";
 import { errorHandlingMiddleware } from "./middlewares/errorhandlingMiddleware.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import ingredienteRoutes from "./routes/ingredienteRoutes.js";
+import roleRoutes from "./routes/roleRoutes.js";
+import platilloRoutes from "./routes/platilloRoutes.js";
 import cookieParser from "cookie-parser";
 import swaggerUI from "swagger-ui-express";
 import specs from "./swagger/swagger.js";
@@ -39,6 +42,9 @@ app.get("/health", (_req: Request, res: Response) => {
 app.use('/api', authRoutes)
 
 app.use('/api', userRoutes)
+app.use('/api', ingredienteRoutes)
+app.use('/api', platilloRoutes)
+app.use('/api', roleRoutes)
 
 
 // debe ir ultimo
