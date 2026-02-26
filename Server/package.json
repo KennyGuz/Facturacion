@@ -25,6 +25,7 @@
     "@types/ms": "^2.1.0",
     "@types/multer": "^2.0.0",
     "@types/node": "^25.3.0",
+    "@types/nodemailer": "^7.0.11",
     "@types/passport": "^1.0.17",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
@@ -52,11 +53,16 @@
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.4.1",
     "@t3-oss/env-core": "^0.13.10",
+    "@upstash/redis": "^1.36.2",
     "bcrypt": "^6.0.0",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
+    "express-rate-limit": "^8.2.1",
+    "nodemailer": "^8.0.1",
+    "nodemailer-mjml": "^1.6.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
+    "uuid": "^13.0.0",
     "zod": "^4.3.6"
   }
 }

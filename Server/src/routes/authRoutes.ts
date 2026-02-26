@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { authController } from "../controllers/authController.js";
 import { validateRol, verifyToken } from "../middlewares/authMiddleware.js";
+import { verifyResetToken } from "src/middlewares/resetPasswordMiddleware.js";
+import { authLimit, resetLimit, rlimit } from "src/middlewares/ratelimitMiddleware.js";
 
 const router = Router();
 
@@ -109,7 +111,7 @@ const router = Router();
  *                 apellido: Apellido demasiado corto
  *                 cedula: Cedula demasiado corta
  */
-router.post("/register", verifyToken, validateRol('admin'), authController.register);
+router.post("/register", rlimit, verifyToken, validateRol('admin'), authController.register);
 
 
 
@@ -161,7 +163,7 @@ router.post("/register", verifyToken, validateRol('admin'), authController.regis
  *               success: false
  *               message: El usuario o contraseña incorrectos
  */
-router.post("/login", authController.login);
+router.post("/login", authLimit, authController.login);
 
 
 /**
@@ -190,7 +192,93 @@ router.post("/login", authController.login);
  *               success: false
  *               message: Error interno del servidor
  */
-router.post("/logout", authController.logout);
+router.post("/logout", rlimit, authController.logout);
+
+
+
+/**
+ * @swagger
+ * /api/resetpassword:
+ *   post:
+ *     summary: Genera el token para resetear contraseña
+ *     tags: [autenticacion]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: Correo electronico del usuario
+ *     responses:
+ *       201:
+ *         description: El usuario envió el correo electronico con el link de reseteo de contraseña
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Response'
+ *             example:
+ *               success: true
+ *               message: OK
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Response'
+ *             example:
+ *               success: false
+ *               message: Error interno del servidor
+ */
+router.post("/resetpassword",resetLimit, authController.sendResetPassword);
+
+/**
+ * @swagger
+ * /api/validateResetToken:
+ *   post:
+ *     summary: validar el token de reseteo de contraseña
+ *     tags: [autenticacion]
+ *     parameters:
+ *       - in: query
+ *         name: token
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Token de reseteo de contraseña
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 description: Contraseña nueva
+ *     responses:
+ *       201:
+ *         description: El usuario envió el correo electronico con el link de reseteo de contraseña
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Response'
+ *             example:
+ *               success: true
+ *               message: se reseteo la contraseña
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Response'
+ *             example:
+ *               success: false
+ *               message: Error interno del servidor
+ */
+router.post("/validateResetToken", authLimit,verifyResetToken, authController.resetPassword);
+
 
 
 export default router;

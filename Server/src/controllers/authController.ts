@@ -11,15 +11,15 @@ export const authController = {
 			const result = await authService.register({
 				email,
 				password,
-				 nombre,
-				 apellido,
-				 cedula,
+				nombre,
+				apellido,
+				cedula,
 			});
 
 			// enviar al frontend el error 
-			if (!result.success) return res.status(400).json({result});
+			if (!result.success) return res.status(400).json( result );
 
-			return res.status(201).json({ result });
+			return res.status(201).json(result );
 		} catch (error) {
 			res.status(500).json({ error: "Error Interno del servidor" });
 		}
@@ -35,7 +35,7 @@ export const authController = {
 			const result = await authService.login(email, password);
 			if (!result.success) return res.status(400).json({ error: result.message });
 
-			const token = jwt.sign({ userid: result.data.ID }, runtimeEnv.JWT_SECRET);
+			const token = jwt.sign({ userid: result.data.ID }, runtimeEnv.JWT_SECRET, {expiresIn: '5d'});
 
 			res.cookie("_tk", token, {
 				httpOnly: true,
@@ -51,7 +51,7 @@ export const authController = {
 		}
 	},
 
-		async logout(_req: Request, res: Response) {
+	async logout(_req: Request, res: Response) {
 		try {
 			res.clearCookie("_tk", {
 				httpOnly: true,
@@ -66,5 +66,41 @@ export const authController = {
 			res.status(500).json({ error: "Error Interno del servidor" });
 		}
 	},
+
+	async sendResetPassword(req: Request, res: Response) {
+		try {
+			const { email } = req.body;
+			if (!email) return res.status(400).json({ error: "Bad Request" });
+			const result = await authService.sendResetPassword(email);
+			if (!result.success) return res.status(400).json(result);
+
+			return res.status(200).json({ success: result.success, message: result.message });
+
+
+		} catch (error) {
+			console.log(error)
+			res.status(500).json({ error: "Error Interno del servidor" });
+		}
+	},
+
+
+	async resetPassword(req: Request, res: Response) {
+		try {
+			const { password } = req.body;
+			if (!password) return res.status(400).json({ error: "Bad Request" });
+
+			const userid = Number(req.user!.userid);
+			const result = await authService.resetPassword(userid, password);
+			if (!result.success) return res.status(400).json(result);
+
+			return res.status(200).json({ success: result.success, message: result.message });
+
+
+		} catch (error) {
+			console.log(error)
+			res.status(500).json({success:false, error: "Error Interno del servidor" });
+		}
+	},
+
 
 }

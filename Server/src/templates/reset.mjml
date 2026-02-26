@@ -1,0 +1,23 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all padding="0px"></mj-all>
+      <mj-text font-family="system-ui, sans-serif" padding="0 25px" font-size="13px"></mj-text>
+      <mj-section background-color="#f9fbfd"></mj-section>
+      <mj-class name="preheader" color="#04090e" font-size="11px"></mj-class>
+    </mj-attributes>
+    <mj-style inline="inline">a { text-decoration: none!important; color: inherit!important; }</mj-style>
+  </mj-head>
+  <mj-body background-color="#f9fbfd">
+    <mj-section padding-bottom="20px" padding-top="10px">
+      <mj-column>
+        <mj-text align="center" padding="10px 25px" font-size="20px" color="#512d0b"><strong>Hola {{FirstName}} {{LastName}} !</strong></mj-text>
+        <mj-text align="center" font-size="18px" font-family="Arial">Restablece tu contraseña <br /> Ingrese a este enlace para restablecer su contraseña:</mj-text>
+        <mj-button background-color="#4798f5" color="#FFFFFF" href="http://localhost:4200/resetpassword?token={{Token}}" font-family="Arial, sans-serif" padding="20px 0 0 0" font-weight="bold" font-size="16px">Reset password</mj-button>
+        <mj-text align="center" color="#000000" font-size="14px" font-family="Arial, sans-serif" padding-top="40px">Valhalla bar restaurant &copy; 2026
+          <p></p>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
