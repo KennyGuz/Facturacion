@@ -34,6 +34,11 @@ model Usuario {
     Reservas  Reserva[]
     CreatedAt DateTime  @default(now())
     UpdatedAt DateTime  @updatedAt
+
+	@@index([Cedula])
+	@@index([Email])
+	@@index([Nombre])
+	@@index([Apellido])
 }
 
 //Modelo Ingrediente
@@ -77,13 +82,16 @@ model PlatilloIngrediente {
 model Mesa {
     ID          Int  @id @default(autoincrement())
     NumeroMesa  Int  @unique
-    EstaOcupada Boolean
+    EstaOcupada Boolean @default(false) 
 
     Ordenes   Orden[]
     Reservas  Reserva[]
     Active    Boolean   @default(true)
     CreatedAt DateTime  @default(now())
     UpdatedAt DateTime  @updatedAt
+
+	@@index([EstaOcupada])
+	@@index([NumeroMesa])
 }
 
 //Modelo Orden
@@ -127,13 +135,13 @@ model Factura {
     IDOrden Int @unique
     Orden   Orden  @relation(fields: [IDOrden], references: [ID])
 
-    FechaHora  DateTime @default(now())
     TotalBruto Float
     Impuestos  Float
     Total      Float
     CreatedAt  DateTime @default(now())
-    UpdatedAt  DateTime @updatedAt
     Active     Boolean  @default(true)
+
+	@@index([CreatedAt])
 }
 
 //Modelo Reserva
@@ -156,4 +164,10 @@ model Reserva {
     CreatedAt      DateTime @default(now())
     UpdatedAt      DateTime @updatedAt
     Active         Boolean  @default(true)
+
+	@@index([NombreCliente])
+	@@index([CedulaCliente])
+	@@index([TelefonoCliente])
+	@@index([NumeroPersonas])
+
 }

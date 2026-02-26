@@ -209,6 +209,21 @@ export const userService = {
 				where: where,
 				skip: skip,
 				take: limit,
+				select: {
+					Nombre: true,
+					Apellido: true,
+					Cedula: true,
+					Email: true,
+					Active: true,
+					CreatedAt: true,
+					UpdatedAt: true,
+					Roles: {
+						select: {
+							ID: true,
+							Name: true
+						}
+					}
+				},
 				orderBy: { Nombre: 'asc' }
 			}),
 			prisma.usuario.count({ where })
