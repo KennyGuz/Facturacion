@@ -201,7 +201,6 @@ export const userService = {
 					{ Email: { contains: search } },
 				]
 			}
-			console.log("activo: ", activo)
 			if (activo !== undefined) where.Active = activo
 
 

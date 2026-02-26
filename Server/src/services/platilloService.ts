@@ -236,13 +236,13 @@ export const platilloService = {
 	async getPlatillo(id: number): Promise<ServeResponse> {
 		try {
 			const platillo = await prisma.platillo.findUnique({
-				where: { ID: id, Active: true },
+				where: { ID: id},
 				include: {
 					PlatilloIngredientes: {
 						select: {
 							CantidadKilosIngrediente: true,
 							Ingrediente: {
-								select: { Nombre: true }
+								select: { ID: true, Nombre: true }
 							}
 						}
 					}
@@ -258,6 +258,7 @@ export const platilloService = {
 			const result = {
 				...platillo,
 				PlatilloIngredientes: platillo.PlatilloIngredientes.map(pi => ({
+					ID: pi.Ingrediente.ID,
 					Nombre: pi.Ingrediente.Nombre,
 					Cantidad: pi.CantidadKilosIngrediente
 				}))

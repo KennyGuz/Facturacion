@@ -8,6 +8,10 @@ import userRoutes from "./routes/userRoutes.js";
 import ingredienteRoutes from "./routes/ingredienteRoutes.js";
 import roleRoutes from "./routes/roleRoutes.js";
 import platilloRoutes from "./routes/platilloRoutes.js";
+import mesaRoutes from "./routes/mesaRoutes.js";
+import ordenRoutes from "./routes/ordenRoutes.js";
+import reservaRoutes from "./routes/reservaRoutes.js";
+import facturaRoutes from "./routes/facturaRoutes.js";
 import cookieParser from "cookie-parser";
 import swaggerUI from "swagger-ui-express";
 import specs from "./swagger/swagger.js";
@@ -45,6 +49,10 @@ app.use('/api', userRoutes)
 app.use('/api', ingredienteRoutes)
 app.use('/api', platilloRoutes)
 app.use('/api', roleRoutes)
+app.use('/api', mesaRoutes)
+app.use('/api', ordenRoutes)
+app.use('/api', reservaRoutes)
+app.use('/api', facturaRoutes)
 
 
 // debe ir ultimo
