@@ -13,19 +13,28 @@ pnpm install
 ⚠️ **Importante**: Usar `pnpm` para todas las operaciones de Prisma
 
 ```bash
-# 1. Generar cliente Prisma (NECESARIO antes de cualquier operación)
-pnpm prisma generate
-
-# 2. Correr migraciones
-pnpm prisma migrate dev
-
-# 3. Incluir datos de prueba
-pnpm prisma db seed
+# 1. Generar la base de datos por primera vez (NECESARIO antes de cualquier operación)
+pnpm db:init 
 ```
+
+### Migraciones
+```bash
+# 1. Crear migraciones
+pnpm db:migrate-new -- NOMBRE_MIGRACION
+
+
+# 2. Validar migraciones
+pnpm db:validate
+
 
 ### Ejecución
 ```bash
 pnpm run dev
+```
+### Reiniciar la base de datos completamente
+
+```bash
+pnpm db:reset
 ```
 
 ### Swagger
