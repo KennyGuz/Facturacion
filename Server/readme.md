@@ -20,7 +20,7 @@ pnpm db:init
 ### Migraciones
 ```bash
 # 1. Crear migraciones
-pnpm db:migrate-new -- NOMBRE_MIGRACION
+pnpm db:migrate-new NOMBRE_MIGRACION
 
 
 # 2. Validar migraciones
