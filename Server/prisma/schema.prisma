@@ -10,7 +10,7 @@ datasource db {
 
 //Modelos
 //Modelo roles
-model Role {
+model Permisos {
     ID        Int     @id  @default(autoincrement())
     Name      String    @unique @db.VarChar(50)
     Usuarios  Usuario[]
@@ -27,7 +27,8 @@ model Usuario {
 	Password String @db.VarChar(255)
     Nombre String  @db.VarChar(100)
 	Apellido String @db.VarChar(100)
-    Roles  Role[]
+    Permisos Permisos[]
+    Rol    String  @db.VarChar(50) @default("Trabajador")
     Active Boolean @default(true)
 
     Ordenes   Orden[]
@@ -171,3 +172,6 @@ model Reserva {
 	@@index([NumeroPersonas])
 
 }
+
+
+

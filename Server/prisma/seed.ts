@@ -1,9 +1,11 @@
-import { PrismaClient } from "generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
+
 
 const prisma = new PrismaClient();
 
 async function main() {
-	await prisma.role.createMany({
+	/*
+	await prisma.permisos.createMany({
 		data: [
 			{
 				ID: 1,
@@ -28,6 +30,7 @@ async function main() {
 		],
 		skipDuplicates: true,
 	});
+	*/
 
 	await prisma.usuario.create({
 		data: {
@@ -36,11 +39,7 @@ async function main() {
 			Nombre: "admin",
 			Apellido: "admin",
 			Cedula: "123456789",
-			Roles: {
-				connect: [{
-					ID: 1
-				}]
-			},
+			Rol: "admin",
 		},
 	})
 }
