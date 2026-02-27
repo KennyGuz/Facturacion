@@ -29,7 +29,7 @@ export const UserSchema = z.object({
 			message: 'El email del usuario debe ser valido'
 		}),
 	// el rol default es bartender
-	rol: z.array(z.number()).optional(),
+	permisos: z.array(z.number()).optional(),
 
 })
 export type UserData = z.infer<typeof UserSchema>
@@ -65,8 +65,11 @@ export const userService = {
 			}
 			if (validatedData.email !== undefined)
 				updateData.Email = validatedData.email
-			if (validatedData.rol !== undefined)
-				updateData.Roles = validatedData.rol
+			if (validatedData.permisos !== undefined)
+				updateData.Permisos = {
+					set: validatedData.permisos.map(p => ({ ID: p }))
+				}
+
 
 			await prisma.usuario.update({
 				where: {
@@ -135,7 +138,7 @@ export const userService = {
 
 	async getUser(id: number, currentUser: JwtPayload): Promise<ServeResponse> {
 		try {
-			if (currentUser.roles[0] !== 'admin' && Number(currentUser.userid) !== id) {
+			if (!currentUser.permisos.includes('admin') && Number(currentUser.userid) !== id) {
 				return {
 					success: false,
 					message: "No tienes permisos para acceder a este usuario",
@@ -152,7 +155,7 @@ export const userService = {
 					Cedula: true,
 					Email: true,
 					Active: true,
-					Roles: {
+					Permisos: {
 						select: {
 							ID: true,
 							Name: true
@@ -209,6 +212,7 @@ export const userService = {
 				skip: skip,
 				take: limit,
 				select: {
+					ID: true,
 					Nombre: true,
 					Apellido: true,
 					Cedula: true,
@@ -216,7 +220,7 @@ export const userService = {
 					Active: true,
 					CreatedAt: true,
 					UpdatedAt: true,
-					Roles: {
+					Permisos: {
 						select: {
 							ID: true,
 							Name: true
@@ -271,7 +275,7 @@ export const userService = {
 					Cedula: true,
 					Email: true,
 					Active: true,
-					Roles: {
+					Permisos: {
 						select: {
 							ID: true,
 							Name: true

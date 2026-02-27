@@ -3,19 +3,19 @@ import { prisma } from "../utils/prisma.js";
 import { ServeResponse } from "../types/response.js";
 import { z } from 'zod'
 
-export const rolesSchema = z.object({
+export const permisoSchema = z.object({
 	nombre: z.string()
-		.min(1, 'Nombre del rol es requerido')
-		.max(50, 'El nombre del rol no puede supoerar los 50 caracteres'),
+		.min(1, 'Nombre del permiso es requerido')
+		.max(50, 'El nombre del permiso no puede supoerar los 50 caracteres'),
 
 })
-export type rolesData = z.infer<typeof rolesSchema>
+export type permisoData = z.infer<typeof permisoSchema>
 
-export const rolesService = {
+export const permisoService = {
 
-	async createRole(data: rolesData): Promise<ServeResponse> {
+	async createPermiso(data: permisoData): Promise<ServeResponse> {
 		try {
-			const validationResult = rolesSchema.safeParse(data);
+			const validationResult = permisoSchema.safeParse(data);
 
 			if (!validationResult.success) {
 				return {
@@ -27,7 +27,7 @@ export const rolesService = {
 
 			const validatedData = validationResult.data
 
-			const rol = await prisma.role.create({
+			const permiso = await prisma.permisos.create({
 				data: {
 					Name: validatedData.nombre,
 				}
@@ -36,7 +36,7 @@ export const rolesService = {
 			return {
 				success: true,
 				message: "OK",
-				data: rol
+				data: permiso
 			};
 		} catch (error) {
 			console.error(error);
@@ -44,8 +44,8 @@ export const rolesService = {
 				if (error.code === 'P2002') {
 					return {
 						success: false,
-						message: "Ya existe un rol con ese nombre",
-						error: "Error al crear rol"
+						message: "Ya existe un permiso con ese nombre",
+						error: "Error al crear permiso"
 					}
 				}
 			}
@@ -53,9 +53,9 @@ export const rolesService = {
 		}
 	},
 
-	async updateRole(id: number, data: Partial<rolesData>): Promise<ServeResponse> {
+	async updatePermiso(id: number, data: Partial<permisoData>): Promise<ServeResponse> {
 		try {
-			const roleSchemaPartial = rolesSchema.partial();
+			const roleSchemaPartial = permisoSchema.partial();
 			const validationResult = roleSchemaPartial.safeParse(data);
 
 			if (!validationResult.success) {
@@ -73,7 +73,7 @@ export const rolesService = {
 				updateData.Name = validatedData.nombre
 
 
-			const rol = await prisma.role.update({
+			const permiso = await prisma.permisos.update({
 				where: {
 					ID: id
 				},
@@ -83,7 +83,7 @@ export const rolesService = {
 			return {
 				success: true,
 				message: "OK",
-				data: rol
+				data: permiso
 			};
 		} catch (error) {
 			console.error(error);
@@ -91,15 +91,15 @@ export const rolesService = {
 				if (error.code === 'P2002') {
 					return {
 						success: false,
-						message: "Ya existe un rol con ese nombre",
-						error: "Error al actualizar rol"
+						message: "Ya existe un permiso con ese nombre",
+						error: "Error al actualizar permiso"
 					}
 				}
 				if (error.code === 'P2025') {
 					return {
 						success: false,
-						message: "rol no encontrado",
-						error: "Error al actualizar rol"
+						message: "permiso no encontrado",
+						error: "Error al actualizar permiso"
 					}
 				}
 			}
@@ -107,54 +107,33 @@ export const rolesService = {
 		}
 	},
 
-	async deleteRole(id: number): Promise<ServeResponse> {
+	async inactivarPermiso(id: number): Promise<ServeResponse> {
 		try {
-			await prisma.role.update({
-				where: {
-					ID: id
-				},
-				data: {
-					Active: false
-				}
-			})
 
-			return {
-				success: true,
-				message: "Rol inactivo",
-			};
-		} catch (error) {
-			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
-				if (error.code === 'P2025') {
-					return {
-						success: false,
-						message: "rol no encontrado",
-						error: "Error al inactivar rol"
-					}
-				}
-			}
-			throw error;
-		}
-	},
-
-	async getRole(id: number): Promise<ServeResponse> {
-		try {
-			const rol = await prisma.role.findUnique({
+			const permiso = await prisma.permisos.findUnique({
 				where: {
 					ID: id,
 				},
 			})
 
-			if (!rol) return {
+			if (!permiso) return {
 				success: false,
-				message: "rol no encontrado",
-				error: "rol no encontrado"
+				message: "Permiso no encontrado",
+				error: "Permiso no encontrado"
 			};
+
+			await prisma.permisos.update({
+				where: {
+					ID: id
+				},
+				data: {
+					Active: !permiso.Active
+				}
+			})
 
 			return {
 				success: true,
-				message: "OK",
-				data: rol
+				message: "Permiso modificado",
 			};
 		} catch (error) {
 			console.error(error);
@@ -162,8 +141,8 @@ export const rolesService = {
 				if (error.code === 'P2025') {
 					return {
 						success: false,
-						message: "rol no encontrado",
-						error: "Error al obtener rol"
+						message: "permiso no encontrado",
+						error: "Error al inactivar permiso"
 					}
 				}
 			}
@@ -171,7 +150,41 @@ export const rolesService = {
 		}
 	},
 
-	async getRoles(search?: string, activo?: boolean, page = 1, limit = 10): Promise<ServeResponse> {
+	async getPermiso(id: number): Promise<ServeResponse> {
+		try {
+			const permiso = await prisma.permisos.findUnique({
+				where: {
+					ID: id,
+				},
+			})
+
+			if (!permiso) return {
+				success: false,
+				message: "permiso no encontrado",
+				error: "permiso no encontrado"
+			};
+
+			return {
+				success: true,
+				message: "OK",
+				data: permiso
+			};
+		} catch (error) {
+			console.error(error);
+			if (error instanceof PrismaClientKnownRequestError) {
+				if (error.code === 'P2025') {
+					return {
+						success: false,
+						message: "permiso no encontrado",
+						error: "Error al obtener permiso"
+					}
+				}
+			}
+			throw error;
+		}
+	},
+
+	async getPermisos(search?: string, activo?: boolean, page = 1, limit = 10): Promise<ServeResponse> {
 		try {
 			const skip = (page - 1) * limit;
 
@@ -183,21 +196,21 @@ export const rolesService = {
 			}
 			if (activo !== undefined) where.Active = activo
 
-			const [roles, total] = await Promise.all([
-				prisma.role.findMany({
+			const [permisos, total] = await Promise.all([
+				prisma.permisos.findMany({
 					where: where,
 					skip: skip,
 					take: limit,
 					orderBy: { Name: 'asc' }
 				}),
-				prisma.role.count({ where })
+				prisma.permisos.count({ where })
 			]);
 
 			return {
 				success: true,
 				message: "OK",
 				data: {
-					roles,
+					permisos,
 					pagination: {
 						page,
 						limit,
@@ -212,8 +225,8 @@ export const rolesService = {
 				if (error.code === 'P2002') {
 					return {
 						success: false,
-						message: "Error al obtener los roles",
-						error: "Error al obtener los roles"
+						message: "Error al obtener los permisos",
+						error: "Error al obtener los permisos"
 					}
 				}
 			}

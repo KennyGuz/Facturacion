@@ -14,16 +14,15 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
 	try {
 		//obtenemos el token del header
 		const payload = jwt.verify(token, runtimeEnv.JWT_SECRET) as JwtPayload;
-		
 
 
-		//validamos el rol del usuario 
-		const currentUserRoles = await prisma.usuario.findUnique({
+		//validamos el permiso del usuario 
+		const currentUserPermisos = await prisma.usuario.findUnique({
 			where: {
 				ID: Number(payload.userid)
 			},
 			select: {
-				Roles: {
+				Permisos: {
 					select: {
 						ID: true,
 						Name: true
@@ -31,17 +30,21 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
 				}
 			}
 		})
-		if(!currentUserRoles || currentUserRoles.Roles.length === 0) return res.status(403).json({error: 'Usuario sin permisos, contactar al administrador'});
+		if (!currentUserPermisos || currentUserPermisos.Permisos.length === 0) return res.status(403).json({
+			success: false,
+			error: 'Usuario sin permisos, contactar al administrador'
+		});
 
-		const roleNames = currentUserRoles.Roles.map(role => role.Name)
+		const permisosNames = currentUserPermisos.Permisos.map(p => p.Name)
+		console.log("permisos del usuario:", permisosNames)
 
 
 		// @ts-ignore: el payload debe guardar el id del usuario y los roles
-		req.user = {userid: payload.userid, roles: roleNames}
-		console.log("user roles:", req.user?.roles[0])
+		req.user = { userid: payload.userid, permisos: permisosNames }
 		next();
 
 	} catch (err) {
+		console.log(err)
 		if (err instanceof jwt.TokenExpiredError) {
 			return res.status(401).json({ error: err.message })
 		}
@@ -49,20 +52,20 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
 	}
 }
 
-export  function validateRol(rol: string){
-	return  (req: Request, res: Response, next: NextFunction) => {
+export function validatePermisos(permiso: string) {
+	return (req: Request, res: Response, next: NextFunction) => {
 		try {
-		if(!req.user) return res.status(403).json({error: 'Acceso no autorizado'});
+			if (!req.user) return res.status(403).json({ error: 'Acceso no autorizado' });
 
-
-		
-		if(req.user.roles[0] !== rol) 
-			return res.status(401).json({error: 'Acceso no autorizado'});
+			const permisos = req.user.permisos;
+			console.log(permisos)
+			if (!permisos.includes(permiso))
+				return res.status(401).json({ error: 'Acceso no autorizado' });
 		} catch (error) {
 			console.log(error)
-			return res.status(500).json({error: 'Error interno del servidor'});
+			return res.status(500).json({ error: 'Error interno del servidor' });
 		}
-	next();
+		next();
 
 	}
 

@@ -82,9 +82,10 @@ export const authService = {
 					Cedula: validatedData.cedula,
 					Password: password,
 					Active: true,
-					Roles: {
+					Permisos: {
 						connect: [{
-							ID: 2
+							// por defecto el rol es trabajador
+							ID: 6
 						}]
 					},
 

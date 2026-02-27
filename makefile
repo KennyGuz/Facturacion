@@ -42,4 +42,4 @@ up-prod: down-prod
 
 install:
 	cd web && npm install
-	cd Server && npm install
+	cd Server && pnpm i

@@ -6,14 +6,15 @@ export const userController = {
 	async updateUser(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			const { email, password, nombre, apellido, cedula } = req.body;
+			const { email, password, nombre, apellido, cedula, permisos } = req.body;
 
 			const result = await userService.updateUser(Number(id), {
 				email,
 				password,
 				nombre,
 				apellido,
-				cedula
+				cedula,
+				permisos
 			});
 			if (!result.success) return res.status(400).json(result);
 

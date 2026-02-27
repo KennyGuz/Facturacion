@@ -3,6 +3,7 @@
 ### Requisitos
 
 - Node.js 20.x
+- [pnpm](https://pnpm.io/es/installation)
 - Docker
 - make
 
@@ -17,7 +18,12 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 scoop install make
 ```
 
-#### Instalar make para unix
+#### Instalar pnpm
+```bash
+npm install -g pnpm
+```
+
+#### Instalar make si no estas en windows
 https://www.gnu.org/software/make/ 
 
 ```bash
@@ -41,10 +47,10 @@ nvm install lts
 nvm use lts
 ```
 
-```bash
-# instalar dependencias
-make install
+### Instalación de dependencias
 
+```bash
+make install
 ```
 
 ### Desarrollo

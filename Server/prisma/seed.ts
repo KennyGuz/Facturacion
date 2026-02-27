@@ -4,7 +4,8 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-	/*
+
+
 	await prisma.permisos.createMany({
 		data: [
 			{
@@ -27,19 +28,28 @@ async function main() {
 				ID: 5,
 				Name: "soporte",
 			},
+			{
+				ID: 6,
+				Name: "trabajador",
+			},
 		],
 		skipDuplicates: true,
 	});
-	*/
 
 	await prisma.usuario.create({
 		data: {
+			ID: 1,
 			Email: "vrtxai@protonmail.com",
 			Password: "$2b$10$g0MtRwH3c8vjdfGWXdrk3eaHymEdi7BMwl./ZcTGfJ3xbxMMib5V.",
 			Nombre: "admin",
 			Apellido: "admin",
 			Cedula: "123456789",
 			Rol: "admin",
+			Permisos: {
+				connect: {
+					ID: 1,
+				},
+			},
 		},
 	})
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authController } from "../controllers/authController.js";
-import { validateRol, verifyToken } from "../middlewares/authMiddleware.js";
+import { validatePermisos, verifyToken } from "../middlewares/authMiddleware.js";
 import { verifyResetToken } from "src/middlewares/resetPasswordMiddleware.js";
 import { authLimit, resetLimit, rlimit } from "src/middlewares/ratelimitMiddleware.js";
 
@@ -111,7 +111,7 @@ const router = Router();
  *                 apellido: Apellido demasiado corto
  *                 cedula: Cedula demasiado corta
  */
-router.post("/register", rlimit, verifyToken, validateRol('admin'), authController.register);
+router.post("/register", rlimit, verifyToken, validatePermisos('admin'), authController.register);
 
 
 

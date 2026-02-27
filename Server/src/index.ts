@@ -6,12 +6,12 @@ import { errorHandlingMiddleware } from "./middlewares/errorhandlingMiddleware.j
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import ingredienteRoutes from "./routes/ingredienteRoutes.js";
-import roleRoutes from "./routes/roleRoutes.js";
 import platilloRoutes from "./routes/platilloRoutes.js";
 import mesaRoutes from "./routes/mesaRoutes.js";
 import ordenRoutes from "./routes/ordenRoutes.js";
 import reservaRoutes from "./routes/reservaRoutes.js";
 import facturaRoutes from "./routes/facturaRoutes.js";
+import permisoRoutes from "./routes/permisoRoutes.js";
 import cookieParser from "cookie-parser";
 import swaggerUI from "swagger-ui-express";
 import specs from "./swagger/swagger.js";
@@ -48,7 +48,7 @@ app.use('/api', authRoutes)
 app.use('/api', userRoutes)
 app.use('/api', ingredienteRoutes)
 app.use('/api', platilloRoutes)
-app.use('/api', roleRoutes)
+app.use('/api', permisoRoutes)
 app.use('/api', mesaRoutes)
 app.use('/api', ordenRoutes)
 app.use('/api', reservaRoutes)

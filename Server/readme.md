@@ -1,37 +1,45 @@
-## Servicio api de facturacion
-
-### swagger
-http://localhost:42069/api-docs
-
-Se deben realizar pruebas a los endpoints protegidos en otra plataforma
-(postman, yaak) ya que el token esta en las cookies como httpOnly y swagger no puede leerlo.
-Entonces usar swagger como referencia.
+## Servicio API de facturación
 
 ### Requisitos
-- Correr la base de datos desde docker
-
-
+- Correr la base de datos desde docker (`docker compose up` en la raíz)
+- [pnpm](https://pnpm.io/es/installation) (requerido por configuración de Prisma)
 
 ### Instalación
 ```bash
-npm install
+pnpm install
 ```
+
+### Prisma
+⚠️ **Importante**: Usar `pnpm` para todas las operaciones de Prisma
+
+```bash
+# 1. Generar la base de datos por primera vez (NECESARIO antes de cualquier operación)
+pnpm db:init 
+```
+
+### Migraciones
+```bash
+# 1. Crear migraciones
+pnpm db:migrate-new -- NOMBRE_MIGRACION
+
+
+# 2. Validar migraciones
+pnpm db:validate
+
 
 ### Ejecución
 ```bash
-npm run dev
+pnpm run dev
 ```
+### Reiniciar la base de datos completamente
 
-### prisma
-
-#### Correr migraciones 
 ```bash
-npx prisma migrate dev
+pnpm db:reset
 ```
 
-#### Incluir mock data
-```bash
-npx prisma db seed
-```
+### Swagger
+Documentación disponible en: http://localhost:42069/api-docs
+
+> Los endpoints protegidos usan tokens en cookies httpOnly. Usar Postman/Yaak para pruebas autenticadas.
 
 
