@@ -25,12 +25,12 @@ export async function verifyResetToken(req: Request, res: Response, next: NextFu
 		await redisClient.del(`rst:${payload.jit}`);
 
 		//validamos el rol del usuario 
-		const currentUserRoles = await prisma.usuario.findUnique({
+		const currentUserPermisos = await prisma.usuario.findUnique({
 			where: {
 				ID: Number(payload.userid)
 			},
 			select: {
-				Roles: {
+				Permisos: {
 					select: {
 						ID: true,
 						Name: true
@@ -38,14 +38,14 @@ export async function verifyResetToken(req: Request, res: Response, next: NextFu
 				}
 			}
 		})
-		if(!currentUserRoles || currentUserRoles.Roles.length === 0) return res.status(403).json({error: 'Usuario sin permisos, contactar al administrador'});
+		if(!currentUserPermisos || currentUserPermisos.Permisos.length === 0) return res.status(403).json({error: 'Usuario sin permisos, contactar al administrador'});
 
-		const roleNames = currentUserRoles.Roles.map(role => role.Name)
+		const permisosNames = currentUserPermisos.Permisos.map(p => p.Name)
 
 
 		// @ts-ignore: el payload debe guardar el id del usuario y los roles
-		req.user = {userid: payload.userid, roles: roleNames}
-		console.log("user roles:", req.user?.roles[0])
+		req.user = {userid: payload.userid, permisos: permisosNames};
+		console.log("permisos del usuario:", req.user?.permisos[0])
 		next();
 
 	} catch (err) {

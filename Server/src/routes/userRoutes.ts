@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { validateRol, verifyToken } from "../middlewares/authMiddleware.js";
+import { validatePermisos, verifyToken } from "../middlewares/authMiddleware.js";
 import { userController } from "../controllers/userController.js";
 import { rlimit } from "src/middlewares/ratelimitMiddleware.js";
 
@@ -174,7 +174,7 @@ router.get("/profile", rlimit, verifyToken, userController.getProfile);
  *               success: false
  *               message: Error interno del servidor
  */
-router.get("/users", rlimit, verifyToken, validateRol('admin'), userController.getUsers);
+router.get("/users", rlimit, verifyToken, validatePermisos('admin'), userController.getUsers);
 
 /**
  * @swagger
@@ -226,7 +226,7 @@ router.get("/users", rlimit, verifyToken, validateRol('admin'), userController.g
  *               success: false
  *               message: Error interno del servidor
  */
-router.put("/user/:id", rlimit, verifyToken, validateRol('admin'), userController.updateUser);
+router.put("/user/:id", rlimit, verifyToken, validatePermisos('admin'), userController.updateUser);
 
 /**
  * @swagger
@@ -270,7 +270,7 @@ router.put("/user/:id", rlimit, verifyToken, validateRol('admin'), userControlle
  *               success: false
  *               message: usuario no encontrado
  */
-router.delete("/user/:id", rlimit, verifyToken, validateRol('admin'), userController.deleteUser);
+router.delete("/user/:id", rlimit, verifyToken, validatePermisos('admin'), userController.deleteUser);
 
 
 

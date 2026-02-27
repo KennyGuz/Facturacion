@@ -1,13 +1,13 @@
-import { rolesService } from "src/services/rolesService.js";
+import { permisoService } from "src/services/permisoService.js";
 import { querySchema } from "../types/globalSchemas.js";
 import { Request, Response } from "express"
 
-export const roleController = {
+export const permisoController = {
 
-	async createRole(req: Request, res: Response) {
+	async createPermiso(req: Request, res: Response) {
 		try {
 			const { nombre } = req.body;
-			const result = await rolesService.createRole({
+			const result = await permisoService.createPermiso({
 				nombre,
 			});
 
@@ -20,14 +20,14 @@ export const roleController = {
 		}
 	},
 
-	async updateRole(req: Request, res: Response) {
+	async updatePermiso(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
 			const { nombre } = req.body;
 
 
 
-			const result = await rolesService.updateRole(Number(id), {
+			const result = await permisoService.updatePermiso(Number(id), {
 				nombre,
 			});
 
@@ -40,12 +40,12 @@ export const roleController = {
 		}
 	},
 
-	async deleteRole(req: Request, res: Response) {
+	async deletePermiso(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
 
 
-			const result = await rolesService.deleteRole(Number(id));
+			const result = await permisoService.inactivarPermiso(Number(id));
 
 			if (!result.success) return res.status(400).json(result);
 
@@ -56,11 +56,11 @@ export const roleController = {
 		}
 	},
 
-	async getRole(req: Request, res: Response) {
+	async getPermiso(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
 
-			const result = await rolesService.getRole(Number(id));
+			const result = await permisoService.getPermiso(Number(id));
 
 			if (!result.success) return res.status(404).json(result);
 
@@ -71,7 +71,7 @@ export const roleController = {
 		}
 	},
 
-	async getRoles(req: Request, res: Response) {
+	async getPermisos(req: Request, res: Response) {
 		try {
 			const { activo, search, page, limit } = req.query;
 
@@ -86,7 +86,7 @@ export const roleController = {
 			}
 			const validatedData = validationResult.data
 
-			const result = await rolesService.getRoles(
+			const result = await permisoService.getPermisos(
 				validatedData.search,
 				validatedData.activo,
 				validatedData.page,
