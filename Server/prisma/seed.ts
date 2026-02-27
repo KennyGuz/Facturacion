@@ -5,8 +5,6 @@ const prisma = new PrismaClient();
 
 async function main() {
 
-	await prisma.permisos.deleteMany({});
-	await prisma.usuario.deleteMany({});
 
 	await prisma.permisos.createMany({
 		data: [

@@ -8,7 +8,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/index.ts",
     "build": "tsc && tsc-alias -f",
-    "start": "node dist/src/index.js"
+    "start": "node dist/src/index.js",
+	"db:init": "pnpm prisma migrate reset --skip-seed && pnpm prisma db seed && pnpm prisma generate",
+	"db:migrate": "pnpm prisma migrate dev",
+	"db:migrate-new": "pnpm prisma migrate dev -name",
+	"db:seed": "pnpm prisma db seed",
+	"db:reset": "pnpm prisma migrate reset --force",
+	"db:generate": "pnpm prisma generate"
   },
   "keywords": [],
   "author": "",
