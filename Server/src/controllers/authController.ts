@@ -21,7 +21,7 @@ export const authController = {
 
 			return res.status(201).json(result );
 		} catch (error) {
-			res.status(500).json({ error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 
 	},
@@ -31,9 +31,9 @@ export const authController = {
 	async login(req: Request, res: Response) {
 		try {
 			const { email, password } = req.body;
-			if (!email || !password) return res.status(400).json({ error: "Bad Request" });
+			if (!email || !password) return res.status(400).json({ success: false, message: "Bad Request", error: "Email y contraseña son requeridos" });
 			const result = await authService.login(email, password);
-			if (!result.success) return res.status(400).json({ error: result.message });
+			if (!result.success) return res.status(400).json({ success: false, message: result.message, error: result.error });
 
 			const token = jwt.sign({ userid: result.data.ID }, runtimeEnv.JWT_SECRET, {expiresIn: '5d'});
 
@@ -44,10 +44,10 @@ export const authController = {
 				maxAge: 60 * 60 * 24 * 30 * 1000,
 
 			})
-			return res.status(200).json({ success: result.success, message: result.message });
+			return res.status(200).json({ success: true, message: "Sesión iniciada", data: { token } });
 		} catch (error) {
 			console.log(error)
-			res.status(500).json({ error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 	},
 
@@ -63,14 +63,14 @@ export const authController = {
 			return res.status(200).json({ success: true, message: "Sesion cerrada" });
 		} catch (error) {
 			console.log(error)
-			res.status(500).json({ error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 	},
 
 	async sendResetPassword(req: Request, res: Response) {
 		try {
 			const { email } = req.body;
-			if (!email) return res.status(400).json({ error: "Bad Request" });
+			if (!email) return res.status(400).json({ success: false, message: "Bad Request", error: "Email es requerido" });
 			const result = await authService.sendResetPassword(email);
 			if (!result.success) return res.status(400).json(result);
 
@@ -79,7 +79,7 @@ export const authController = {
 
 		} catch (error) {
 			console.log(error)
-			res.status(500).json({ error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 	},
 
@@ -87,10 +87,10 @@ export const authController = {
 	async resetPassword(req: Request, res: Response) {
 		try {
 			const { password } = req.body;
-			if (!password) return res.status(400).json({ error: "Bad Request" });
+			if (!password) return res.status(400).json({ success: false, message: "Bad Request", error: "Contraseña es requerida" });
 
-			const userid = Number(req.user!.userid);
-			const result = await authService.resetPassword(userid, password);
+			const user = req.user!;
+			const result = await authService.resetPassword(Number(user.userid), password, user.jit!);
 			if (!result.success) return res.status(400).json(result);
 
 			return res.status(200).json({ success: result.success, message: result.message });
@@ -98,7 +98,7 @@ export const authController = {
 
 		} catch (error) {
 			console.log(error)
-			res.status(500).json({success:false, error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 	},
 

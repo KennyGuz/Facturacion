@@ -1,0 +1,80 @@
+<form
+  [formGroup]="recoverForm"
+  (ngSubmit)="recoverPassword()"
+  class="pb-5 border-b border-accent"
+>
+
+  <!-- Subtitle -->
+  <h2 class="mb-8 text-center text-2xl font-semibold">
+    Recuperar contraseña
+  </h2>
+
+  @if(!!errorMessage() ){
+  <div  class="mb-4 text-red-600 text-sm text-center font-medium">
+    {{ errorMessage() }}
+  </div>
+  }
+  @if(!!message() ){
+  <div  class="mb-4 text-green-500 text-sm text-center font-medium">
+    {{ message() }}
+  </div>
+  }
+
+  <div class="mb-6">
+    <input
+      type="input"
+      placeholder="Contraseña"
+      id="password"
+      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition"
+      formControlName="password"
+      required
+    />
+        <label for="passwordConfirmation" class="block text-sm font-medium mt-1">
+      contraseña
+    </label>
+  </div>
+  <div class="mb-6">
+    <input
+      type="input"
+      placeholder="Digite la contraseña nuevamente"
+      id="passwordConfirmation"
+      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition"
+      formControlName="passwordConfirmation"
+      required
+    />
+
+    @if(formErrors()['password']){
+  <p id="title-error" class="text-sm text-red-500">
+    {{ formErrors()['password'][0] }}
+  </p>
+}
+
+    <label for="passwordConfirmation" class="block text-sm font-medium mt-1">
+      Confirmar contraseña
+    </label>
+  </div>
+
+
+
+  <!-- ReCAPTCHA Placeholder -->
+  <div class="mb-6">
+    <div class="flex justify-center">
+      <div id="html_element" class="w-full"></div>
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="text-center mb-4">
+    <button
+      type="submit"
+      class="w-full py-3 px-4 bg-primary text-white font-bold rounded-lg hover:bg-accent transition"
+    >
+      Restablecer contraseña
+    </button>
+  </div>
+            <a href="login" class="text-center text-sm text-gray-500 hover:text-gray-700">
+            Iniciar Sesión
+          </a>
+
+</form>
+

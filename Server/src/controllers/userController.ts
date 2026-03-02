@@ -21,7 +21,7 @@ export const userController = {
 			return res.status(200).json(result);
 		} catch (error) {
 			console.log(error)
-			res.status(500).json({ success: false, error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 
 	},
@@ -42,7 +42,7 @@ export const userController = {
 			return res.status(200).json(result);
 		} catch (error) {
 			console.log(error)
-			res.status(500).json({ success: false, error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 	},
 
@@ -62,7 +62,7 @@ export const userController = {
 			return res.status(200).json(result);
 		} catch (error) {
 			console.log(error)
-			res.status(500).json({ success: false, error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 	},
 
@@ -94,7 +94,7 @@ export const userController = {
 			return res.status(200).json(result);
 		} catch (error) {
 			console.log(error)
-			res.status(500).json({ success: false, error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 	},
 
@@ -108,7 +108,7 @@ export const userController = {
 			return res.status(200).json(result);
 		} catch (error) {
 			console.log(error)
-			res.status(500).json({ success: false, error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 	},
 
