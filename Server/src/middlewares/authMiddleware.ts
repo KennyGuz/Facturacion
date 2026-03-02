@@ -8,7 +8,7 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
 	//agarramos el header del request
 	const token = req.cookies['_tk'];
 	if (!token) {
-		return res.status(403).json({ error: 'El token no esta presente' })
+		return res.status(403).json({ success: false, message: 'Token no presente', error: 'El token no esta presente' })
 	}
 
 	try {
@@ -48,22 +48,22 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
 		if (err instanceof jwt.TokenExpiredError) {
 			return res.status(401).json({ error: err.message })
 		}
-		return res.status(403).json({ error: "No se pudo verificar el token" })
+		return res.status(403).json({ success: false, message: "No se pudo verificar el token", error: "No se pudo verificar el token" })
 	}
 }
 
 export function validatePermisos(permiso: string) {
 	return (req: Request, res: Response, next: NextFunction) => {
 		try {
-			if (!req.user) return res.status(403).json({ error: 'Acceso no autorizado' });
+			if (!req.user) return res.status(403).json({ success: false, message: 'Token no presente', error: 'Token no presente' });
 
 			const permisos = req.user.permisos;
 			console.log(permisos)
 			if (!permisos.includes(permiso))
-				return res.status(401).json({ error: 'Acceso no autorizado' });
+				return res.status(401).json({ success: false, message: 'Permiso no autorizado', error: 'Permiso no autorizado' });
 		} catch (error) {
 			console.log(error)
-			return res.status(500).json({ error: 'Error interno del servidor' });
+			return res.status(500).json({ success: false, message: "Error interno del servidor", error: "Error Interno del servidor" });
 		}
 		next();
 

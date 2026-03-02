@@ -26,12 +26,14 @@ export const authService = {
 
 			if (!user) return {
 				success: false,
-				message: "Usuario o contraseña incorrectos"
+				message: "No se pudo iniciar sesión",
+				error: "Usuario o contraseña incorrectos"
 			};
 			const passwordMatch = await bcrypt.compare(password, user.Password);
 			if (!passwordMatch) return {
 				success: false,
-				message: "Usuario o contraseña incorrectos"
+				message: "No se pudo iniciar sesión",
+				error: "Usuario o contraseña incorrectos"
 			};
 
 			return {
@@ -46,7 +48,8 @@ export const authService = {
 				if (error.code === 'P2002') {
 					return {
 						success: false,
-						message: "Usuario o contraseña incorrectos"
+						message: "No se pudo iniciar sesión",
+						error: "Usuario o contraseña incorrectos"
 					}
 				}
 
@@ -119,7 +122,7 @@ export const authService = {
 	async sendResetPassword(email: string): Promise<ServeResponse> {
 		try {
 
-			const validationResult = UserSchema.pick({email: true}).safeParse({email});
+			const validationResult = UserSchema.pick({ email: true }).safeParse({ email });
 
 			if (!validationResult.success) {
 				return {
@@ -130,7 +133,7 @@ export const authService = {
 			}
 			const validatedData = validationResult.data
 
-			
+
 			const user = await prisma.usuario.findUnique({
 				where: {
 					Email: validatedData.email,
@@ -139,7 +142,8 @@ export const authService = {
 			})
 			if (!user) return {
 				success: false,
-				message: "Usuario no encontrado"
+				message: "Verifique su correo electrónico",
+				error: "Usuario no encontrado"
 			};
 			const jit = uuidv4();
 
@@ -190,7 +194,8 @@ export const authService = {
 				if (error.code === 'P2002') {
 					return {
 						success: false,
-						message: "Usuario o contraseña incorrectos"
+						message: "Verifique su correo electrónico",
+						error: "Usuario incorrecto"
 					}
 				}
 
@@ -200,9 +205,16 @@ export const authService = {
 	},
 
 
-	async resetPassword(userid: number, password: string): Promise<ServeResponse> {
+	async resetPassword(userid: number, password: string, jit: string): Promise<ServeResponse> {
 		try {
-			const validationResult = UserSchema.pick({password: true}).safeParse({password});
+			console.log(jit, password, userid)
+			// validamos en redis si el token no ha sido usado
+			const isPending = await redisClient.get(`rst:${jit!}`);
+			console.log(isPending)
+			if (!isPending) {
+				return { success: false, message: 'El token expiro o ya fue utilizado', error: 'token expiro' }
+			};
+			const validationResult = UserSchema.pick({ password: true }).safeParse({ password });
 
 			if (!validationResult.success) {
 				return {
@@ -225,6 +237,9 @@ export const authService = {
 				}
 			});
 
+			await redisClient.del(`rst:${jit!}`);
+
+
 			return {
 				success: true,
 				message: "Contraseña reseteada",
@@ -236,7 +251,8 @@ export const authService = {
 				if (error.code === 'P2002') {
 					return {
 						success: false,
-						message: "Por favor contactar con el administrador"
+						message: "Por favor contactar con el administrador",
+						error: "Error al resetear la contraseña"
 					}
 				}
 

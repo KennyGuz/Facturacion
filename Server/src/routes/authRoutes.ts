@@ -277,7 +277,7 @@ router.post("/resetpassword",resetLimit, authController.sendResetPassword);
  *               success: false
  *               message: Error interno del servidor
  */
-router.post("/validateResetToken", authLimit,verifyResetToken, authController.resetPassword);
+router.post("/validateResetToken/:token", authLimit,verifyResetToken, authController.resetPassword);
 
 
 

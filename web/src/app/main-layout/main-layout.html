@@ -1,7 +1,5 @@
 <div class="flex flex-col min-h-dvh">
-    <!-- Main Section -->
   <section class="flex grow">
-    <!-- Image Column -->
     <div class="hidden lg:flex lg:w-1/2">
       <img
         src="home.webp"
@@ -11,10 +9,8 @@
       />
     </div>
 
-    <!-- Form Column -->
     <div class="w-full lg:w-1/2 flex items-center justify-center px-4 py-8 lg:py-0">
       <div class="w-full max-w-md">
-        <!-- Title -->
           <div class="mb-4 flex justify-center items-center">
             <img
               src="Valhallas.webp"
@@ -24,7 +20,7 @@
               class="object-cover"
             />
           </div>
-          <app-loginform></app-loginform>
+          <router-outlet />
 
                 <p class="text-center  font-medium">
               Valhalla Bar Restaurant &copy; 2026
