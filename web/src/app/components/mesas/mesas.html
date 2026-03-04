@@ -42,7 +42,7 @@
     <div class="flex gap-2 items-center mt-4">
       <button
         class="px-3 py-1 border rounded"
-        (click)="prevPage()"
+        (click)="prevPage(pagination.page)"
         [disabled]="pagination.page <= 1"
       >Anterior</button>
       <span>Página {{ pagination.page }} de {{ pagination.pages }}</span>
@@ -50,7 +50,7 @@
 
       <button
         class="px-3 py-1 border rounded"
-        (click)="nextPage()"
+        (click)="nextPage(pagination.page, pagination.pages)"
         [disabled]="pagination.page >= pagination.pages"
       >Siguiente</button>
     </div>

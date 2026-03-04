@@ -27,22 +27,19 @@ export class Mesas {
     this.mesasService.getMesas(activoFilter, search || '', 1, limit || 10);
   }
 
-  get pagination() {
-    return this.mesaswithdata().pagination;
-  }
 
-  prevPage() {
-    const page = this.pagination?.page ?? 1;
-    if (page > 1) {
-      this.changePage(page - 1);
+  prevPage(page?: number) {
+    const currPage = page ?? 1;
+    if (currPage > 1) {
+      this.changePage(currPage - 1);
     }
   }
 
-  nextPage() {
-    const page = this.pagination?.page ?? 1;
-    const pages = this.pagination?.pages ?? 1;
-    if (page < pages) {
-      this.changePage(page + 1);
+  nextPage(page?: number, pages?: number) {
+    const currPage = page ?? 1;
+    const currPages = pages ?? 1;
+    if (currPage < currPages) {
+      this.changePage(currPage + 1);
     }
   }
 
