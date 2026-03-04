@@ -53,6 +53,7 @@ export const authController = {
 
 	async logout(_req: Request, res: Response) {
 		try {
+			console.log("usuario quiere cerrar sesion")
 			res.clearCookie("_tk", {
 				httpOnly: true,
 				secure: true,

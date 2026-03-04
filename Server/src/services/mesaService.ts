@@ -1,5 +1,5 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { prisma } from "../utils/prisma.js";
+import { Prisma } from '@prisma/client';
 import { ServeResponse } from "../types/response.js";
 import { z } from 'zod'
 
@@ -21,7 +21,7 @@ export const mesaService = {
 				return {
 					success: false,
 					message: "Datos invalidos",
-					errors: validationResult.error.flatten().fieldErrors as Record<string, string[]>
+					errors: validationResult.error.flatten().fieldErrors
 				};
 			}
 
@@ -40,8 +40,8 @@ export const mesaService = {
 				data: mesa
 			};
 		} catch (error) {
-			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
+			//console.error(error);
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
 					return {
 						success: false,
@@ -63,15 +63,14 @@ export const mesaService = {
 				return {
 					success: false,
 					message: "Datos invalidos",
-					errors: validationResult.error.flatten().fieldErrors as Record<string, string[]>
+					errors: validationResult.error.flatten().fieldErrors 
 				};
 			}
 
 			const validatedData = validationResult.data
 			const updateData: Record<string, unknown> = {}
 
-			if (validatedData.numeroMesa !== undefined)
-				updateData.NumeroMesa = validatedData.numeroMesa
+
 			if (validatedData.estaOcupada !== undefined)
 				updateData.EstaOcupada = validatedData.estaOcupada
 
@@ -89,7 +88,7 @@ export const mesaService = {
 			};
 		} catch (error) {
 			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
 					return {
 						success: false,
@@ -126,7 +125,7 @@ export const mesaService = {
 			};
 		} catch (error) {
 			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2025') {
 					return {
 						success: false,
@@ -161,7 +160,7 @@ export const mesaService = {
 			};
 		} catch (error) {
 			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2025') {
 					return {
 						success: false,
@@ -211,7 +210,7 @@ export const mesaService = {
 			};
 		} catch (error) {
 			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
 					return {
 						success: false,
