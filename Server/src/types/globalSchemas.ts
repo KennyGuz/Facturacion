@@ -3,10 +3,10 @@ import { z } from "zod";
 export const querySchema = z.object({
 
  activo: z
-  .enum(["true", "false"])
+  .enum(["true", "false", "all"])
   .optional()
   .transform(val => {
-    if (val === undefined) return undefined;
+    if (val === undefined || val === "all") return undefined;
     return val === "true";
   }),
 

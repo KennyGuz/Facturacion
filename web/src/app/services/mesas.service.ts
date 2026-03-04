@@ -23,13 +23,17 @@ export class MesasService {
   readonly mesas = computed(() => this.state());
 
   getMesas(activo?: boolean, search?: string, page = 1, limit = 10) {
-    const params = new HttpParams();
-    if (activo !== undefined) params.set('activo', activo.toString());
-    if (search !== undefined) params.set('search', search);
-    if (page !== undefined) params.set('page', page.toString());
-    if (limit !== undefined) params.set('limit', limit.toString());
+    console.log(activo, search, page, limit);
+    const params = new HttpParams({
+      fromObject: {
+        activo: activo?.toString() ?? 'all',
+        search: search ?? '',
+        page: page?.toString(),
+        limit: limit?.toString()
+      }
+    });
 
-    return this.http.get<ApiResponse<MesasData>>(`${this.apiUrl}/mesas`,{
+    return this.http.get<ApiResponse<MesasData>>(`${this.apiUrl}/mesas`, {
       params,
       withCredentials: true
     }).subscribe(result => {

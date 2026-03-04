@@ -30,6 +30,7 @@ export class MesasForm {
           this.errorMessage.set(null);
           this.formErrors.set({});
           this.message.set(result.message);
+          this.mesasService.mesas().mesas.push(result.data!);
 
         },
         error: (error) => {

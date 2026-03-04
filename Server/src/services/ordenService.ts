@@ -1,8 +1,8 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { prisma } from "../utils/prisma.js";
 import { ServeResponse } from "../types/response.js";
 import { z } from 'zod'
 import { JwtPayload } from "src/types/jwt.js";
+import { Prisma } from "@prisma/client";
 
 const PlatilloOrdenSchema = z.object({
 	idPlatillo: z.number()
@@ -109,7 +109,7 @@ export const ordenService = {
 			};
 		} catch (error) {
 			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
 					return {
 						success: false,
@@ -144,17 +144,7 @@ export const ordenService = {
 
 			const validatedData = validationResult.data
 
-			const existingOrden = await prisma.orden.findUnique({
-				where: { ID: id, Active: true }
-			})
 
-			if (!existingOrden) {
-				return {
-					success: false,
-					message: "Orden no encontrada",
-					error: "Error al actualizar orden"
-				}
-			}
 
 			const updateData: Record<string, unknown> = {}
 
@@ -235,7 +225,7 @@ export const ordenService = {
 			};
 		} catch (error) {
 			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2025') {
 					return {
 						success: false,
@@ -273,7 +263,7 @@ export const ordenService = {
 			};
 		} catch (error) {
 			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2025') {
 					return {
 						success: false,
@@ -335,7 +325,7 @@ export const ordenService = {
 			};
 		} catch (error) {
 			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2025') {
 					return {
 						success: false,
@@ -412,7 +402,7 @@ export const ordenService = {
 			};
 		} catch (error) {
 			console.error(error);
-			if (error instanceof PrismaClientKnownRequestError) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
 				if (error.code === 'P2002') {
 					return {
 						success: false,

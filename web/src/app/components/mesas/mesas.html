@@ -1,5 +1,32 @@
 <a class="mb-3" routerLink="/dashboard/mesas/new">New mesa</a>
 
+<form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="flex gap-4 mb-4">
+  <input
+    type="text"
+    placeholder="Número de mesa..."
+    class="border border-gray-300 rounded px-3 py-2"
+    formControlName="search"
+  />
+  <select
+    class="border border-gray-300 rounded px-3 py-2"
+    formControlName="activo"
+  >
+    <option value="">Todos</option>
+    <option value="true">Activos</option>
+    <option value="false">Inactivos</option>
+  </select>
+  <select
+    class="border border-gray-300 rounded px-3 py-2"
+    formControlName="limit"
+  >
+    <option [value]="5">5</option>
+    <option [value]="10">10</option>
+    <option [value]="20">20</option>
+    <option [value]="50">50</option>
+  </select>
+  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Buscar</button>
+</form>
+
     @let mesasLocal = mesaswithdata().mesas;
     @let pagination = mesaswithdata().pagination;
 
@@ -10,5 +37,22 @@
     } @empty {
       <p>No hay mesas</p>
     }
-    <p>Pagina {{ pagination?.page }}</p>
+
+    @if (pagination) {
+    <div class="flex gap-2 items-center mt-4">
+      <button
+        class="px-3 py-1 border rounded"
+        (click)="prevPage()"
+        [disabled]="pagination.page <= 1"
+      >Anterior</button>
+      <span>Página {{ pagination.page }} de {{ pagination.pages }}</span>
+      <span>Total de {{ pagination.total }} mesas de {{ pagination.limit }} por página</span>
+
+      <button
+        class="px-3 py-1 border rounded"
+        (click)="nextPage()"
+        [disabled]="pagination.page >= pagination.pages"
+      >Siguiente</button>
+    </div>
+    }
 

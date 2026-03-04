@@ -90,6 +90,7 @@ export const mesaController = {
 	async getMesas(req: Request, res: Response) {
 		try {
 			const { activo, search, page, limit } = req.query;
+			console.log(activo, search, page, limit)
 
 			const validationResult = querySchema.safeParse({ activo, search, page, limit });
 
