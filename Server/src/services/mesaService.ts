@@ -143,7 +143,6 @@ export const mesaService = {
 			const mesa = await prisma.mesa.findUnique({
 				where: {
 					ID: id,
-					Active: true
 				},
 			})
 

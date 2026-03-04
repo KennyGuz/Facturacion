@@ -184,7 +184,7 @@ export const authService = {
 			})
 			return {
 				success: true,
-				message: "OK",
+				message: "Porfavor revisa tu correo electronico",
 				data: user
 			};
 		} catch (error) {
