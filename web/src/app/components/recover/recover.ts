@@ -3,7 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ApiResponse } from '../models';
+import { ApiResponse } from '../../models';
 
 @Component({
   selector: 'app-recover',
@@ -43,10 +43,10 @@ export class Recover {
       return;
     }
 
-    this.http.post<ApiResponse<any>>(`${this.apiUrl}${token}`,
+    this.http.post<ApiResponse<void>>(`${this.apiUrl}${token}`,
       formValues)
       .subscribe({
-        next: (result: ApiResponse<any>) => {
+        next: (result: ApiResponse<void>) => {
           this.errorMessage.set(null);
           this.formErrors.set({});
           this.message.set(result.message);

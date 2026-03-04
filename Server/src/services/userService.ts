@@ -270,6 +270,7 @@ export const userService = {
 					ID: id
 				},
 				select: {
+					ID: true,
 					Nombre: true,
 					Apellido: true,
 					Cedula: true,

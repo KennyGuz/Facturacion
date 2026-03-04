@@ -17,15 +17,14 @@ export const mesaController = {
 
 			return res.status(201).json(result);
 		} catch (error) {
-			console.log(error)
-			res.status(500).json({ success: false, error: "Error Interno del servidor" });
+			res.status(500).json({ success: false, message: "Error Interno del servidor", error: "Error Interno del servidor" });
 		}
 	},
 
 	async updateMesa(req: Request, res: Response) {
 		try {
 			const { id } = req.params;
-			const { numeroMesa, estaOcupada } = req.body;
+			const { estaOcupada } = req.body;
 
 			if (!id || !Number(id)) return res.status(400).json({
 				success: false,
@@ -34,7 +33,6 @@ export const mesaController = {
 			});
 
 			const result = await mesaService.updateMesa(Number(id), {
-				numeroMesa: Number(numeroMesa),
 				estaOcupada
 			});
 

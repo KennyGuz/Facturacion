@@ -1,31 +1,31 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ApiResponse } from '../models';
+import { MesasService } from '../../services/mesas.service';
+import { ApiResponse } from '../../models';
 
 @Component({
-  selector: 'app-forgotpassword',
+  selector: 'app-mesas-form',
   imports: [ReactiveFormsModule],
-  templateUrl: './forgotpassword.html',
-  styleUrl: './forgotpassword.css',
+  templateUrl: './mesas-form.html',
+  styleUrl: './mesas-form.css',
 })
-export class Forgotpassword {
- apiUrl = 'http://localhost:42069/api/resetpassword';
-  errorMessage= signal<string | null>(null);
+export class MesasForm {
+  errorMessage = signal<string | null>(null);
   formErrors = signal<Record<string, string[]>>({});
   message = signal<string | null>(null);
 
-  constructor() { }
-  private http = inject(HttpClient);
-
-  forgotpasswordForm = new FormGroup({
-    email: new FormControl(""),
+  mesasService = inject(MesasService);
+  mesasForm = new FormGroup({
+    numeroMesa: new FormControl(0, {nonNullable: true}),
   })
 
-  sendRecoveryEmail() {
-    this.http.post<ApiResponse<any>>(this.apiUrl, this.forgotpasswordForm.value, {
-    })
-      .subscribe({
+  createNewMesa() {
+    console.log(this.mesasForm.value);
+
+    const formData = this.mesasForm.value;
+
+    this.mesasService.createMesa(formData.numeroMesa)
+    .subscribe({
         next: (result: ApiResponse<any>) => {
           this.errorMessage.set(null);
           this.formErrors.set({});
@@ -38,6 +38,6 @@ export class Forgotpassword {
           this.formErrors.set(error.error.errors ?? {});
         }
       })
-  }
 
+  }
 }

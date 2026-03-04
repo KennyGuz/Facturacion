@@ -1,0 +1,25 @@
+  @if(errorMessage() ){
+  <div  class="mb-4 text-red-600 text-sm text-center font-medium">
+    {{ errorMessage() }}
+  </div>
+  }
+  @if(message() ){
+  <div  class="mb-4 text-green-500 text-sm text-center font-medium">
+    {{ message() }}
+  </div>
+  }
+<form [formGroup]="mesasForm" (ngSubmit)="createNewMesa()">
+
+
+  <div class="form-group">
+    <label for="numeroMesa">Numero de mesa</label>
+    <input type="number" class="form-control" id="numeroMesa" formControlName="numeroMesa" placeholder="Numero de mesa">
+        @if(formErrors()['numeroMesa']){
+  <p id="numeroMesa-error" class="text-sm text-red-500">
+    {{ formErrors()['numeroMesa'][0] }}
+  </p>
+  }
+  </div>
+  <button type="submit" class="btn btn-primary hover:text-green-500">Crear mesa</button>
+
+ </form>

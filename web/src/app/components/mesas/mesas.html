@@ -1,0 +1,14 @@
+<a class="mb-3" routerLink="/dashboard/mesas/new">New mesa</a>
+
+    @let mesasLocal = mesaswithdata().mesas;
+    @let pagination = mesaswithdata().pagination;
+
+    @for (mesa of mesasLocal; track mesa.ID) {
+    <p>{{ mesa.ID }} numero de mesa {{mesa.NumeroMesa}} {{ mesa.EstaOcupada }} activa {{mesa.Active}}</p>
+    <button class="text-green-400" (click)="asignarMesa(mesa.ID, !mesa.EstaOcupada)">Asignar</button>
+    <button class="btn btn-danger" (click)="inactivateMesa(mesa.ID)">Inactivate</button>
+    } @empty {
+      <p>No hay mesas</p>
+    }
+    <p>Pagina {{ pagination?.page }}</p>
+
