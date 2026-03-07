@@ -84,7 +84,7 @@ model Mesa {
     ID          Int  @id @default(autoincrement())
     NumeroMesa  Int  @unique
     EstaOcupada Boolean @default(false) 
-
+	OcupadaDesde DateTime?
     Ordenes   Orden[]
     Reservas  Reserva[]
     Active    Boolean   @default(true)
